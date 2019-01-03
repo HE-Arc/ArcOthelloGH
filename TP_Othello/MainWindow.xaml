@@ -4,9 +4,23 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TP_Othello"
+        xmlns:customControl="clr-"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Othello" Height="450" Width="800">
+    <DockPanel>
+        <ToolBarTray DockPanel.Dock="Top">
+            <ToolBar>
+                
+            </ToolBar>
+        </ToolBarTray>
+        <StackPanel DockPanel.Dock="Right">
+            <TextBlock>
+                GameInfos
+            </TextBlock>
+        </StackPanel>
+        <local:OthelloBoard>
+            
+        </local:OthelloBoard>
         
-    </Grid>
+    </DockPanel>
 </Window>

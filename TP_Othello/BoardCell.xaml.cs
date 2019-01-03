@@ -16,17 +16,13 @@ using System.Windows.Shapes;
 namespace TP_Othello
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Logique d'interaction pour BoardCell.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class BoardCell : UserControl
     {
-  
-
-        public MainWindow()
+        public BoardCell()
         {
             InitializeComponent();
         }
-        
-  
     }
 }
