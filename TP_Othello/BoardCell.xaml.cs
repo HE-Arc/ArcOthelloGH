@@ -18,11 +18,16 @@ namespace TP_Othello
     /// <summary>
     /// Logique d'interaction pour BoardCell.xaml
     /// </summary>
+    /// 
     public partial class BoardCell : UserControl
     {
+        int cellValue = -1;
+
         public BoardCell()
         {
             InitializeComponent();
         }
+
+        public int CellValue { get => cellValue; set => cellValue = value; }
     }
 }
