@@ -21,11 +21,11 @@ namespace TP_Othello
     /// </summary>
     public partial class OthelloBoard : UserControl, IPlayable.IPlayable
     {
-        private Size BOARD_DIMENSIONS = new Size(7, 9);
+        private Size BOARD_DIMENSIONS = new Size(9, 7);
 
-        // Give this to the cells
-        public delegate void CellClickedEventHandler(object Sender);
-        public event CellClickedEventHandler CellClicked;
+        // Those are the event handlers passed to the cells so the event fired for them is handled here
+        private event MouseButtonEventHandler CellClicked;
+        private event MouseEventHandler CellHover;
 
         // Cells components of the board
         // represented as a matrix (row, column)
@@ -36,20 +36,15 @@ namespace TP_Othello
         {
             InitializeComponent();
 
+            CellClicked = new MouseButtonEventHandler(CellClickedHandler);
+            CellHover = new MouseEventHandler(CellHoverHandler);
+
             InitGrid();
         }
 
         private void InitGrid()
         {
-
             boardCells = new BoardCell[(int)BOARD_DIMENSIONS.Height,(int)BOARD_DIMENSIONS.Width];
-
-            //for (int i = 0; i < BOARD_DIMENSIONS.Width; i++)
-               
-
-            //for (int i = 0; i < BOARD_DIMENSIONS.Height; i++)
-               
-
 
             for (int j = 0; j < BOARD_DIMENSIONS.Height; j++)
             {
@@ -57,9 +52,11 @@ namespace TP_Othello
 
                 for (int i = 0; i < BOARD_DIMENSIONS.Width; i++)
                 {
-                    GridBoard.ColumnDefinitions.Add(new ColumnDefinition());
+                    ColumnDefinition columnDefinition = new ColumnDefinition();
+                    columnDefinition.Width = GridLength.Auto;
+                    GridBoard.ColumnDefinitions.Add(columnDefinition);
 
-                    BoardCell boardCell = new BoardCell();
+                    BoardCell boardCell = new BoardCell(CellClicked, CellHover);
 
                     Grid.SetColumn(boardCell, i);
                     Grid.SetRow(boardCell, j);
@@ -68,18 +65,6 @@ namespace TP_Othello
                     boardCells[j, i] = boardCell;
                 }
             }
-
-            /*for(int i = 0; i < BOARD_DIMENSIONS.Width; i++)
-            {
-                for(int j = 0; j < BOARD_DIMENSIONS.Height; j++)
-                {
-                    BoardCell boardCell = new BoardCell();
-
-                    Grid.SetColumn(boardCell, i);
-                    Grid.SetRow(boardCell, j);
-
-                }
-            }*/
         }
 
         public List<BoardCell> GetValidPlays(int playerValue)
@@ -119,9 +104,29 @@ namespace TP_Othello
             return validPlays;
         }
 
-        
+        /// <summary>
+        /// This is the handler function of the click on a cell. It is called by the BoardCell objects
+        /// </summary>
+        /// <see cref="BoardCell"/>
+        /// <param name="Sender"></param>
+        /// <param name="e"></param>
+        private void CellClickedHandler(object Sender, MouseEventArgs e)
+        {
 
-        #region IPlayableRelated
+        }
+
+        /// <summary>
+        /// This is the handler function of the hover on a cell. It is called by the BoardCell objects
+        /// </summary>
+        /// <see cref="BoardCell"/>
+        /// <param name="Sender"></param>
+        /// <param name="e"></param>
+        private void CellHoverHandler(object Sender, MouseEventArgs e)
+        {
+
+        }
+
+        #region IPlayable
 
         public string GetName()
         {

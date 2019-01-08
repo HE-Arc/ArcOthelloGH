@@ -13,9 +13,14 @@
                 
             </ToolBar>
         </ToolBarTray>
+        <StackPanel DockPanel.Dock="Left">
+            <TextBlock Margin="5,0,5,0">
+                Player 1
+            </TextBlock>
+        </StackPanel>
         <StackPanel DockPanel.Dock="Right">
-            <TextBlock>
-                GameInfos
+            <TextBlock Margin="5,0,5,0">
+                Player 2
             </TextBlock>
         </StackPanel>
         <local:OthelloBoard>

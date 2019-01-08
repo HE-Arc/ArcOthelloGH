@@ -23,11 +23,19 @@ namespace TP_Othello
     {
         int cellValue = -1;
 
-        public BoardCell()
+        public BoardCell(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover)
         {
             InitializeComponent();
+            contentLabel.MouseLeftButtonDown += cellClicked;
+            contentLabel.MouseEnter += cellHover;
+            contentLabel.MouseLeave += new MouseEventHandler(ResetDisplay));
         }
 
         public int CellValue { get => cellValue; set => cellValue = value; }
+
+        private void ResetDisplay(object Sender, MouseEventArgs e)
+        {
+
+        }
     }
 }
