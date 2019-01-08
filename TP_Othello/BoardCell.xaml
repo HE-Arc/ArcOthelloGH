@@ -7,10 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Border BorderThickness="2" BorderBrush="Black">
-        <Label x:Name="contentLabel">
-            <Image>
+        <!--<Border.Resources>
+            <Style TargetType="Border" x:Key="Cell_Hovered">
+                
+            </Style>
+            <Style TargetType="Border" x:Key="Cell_Regular">
+
+            </Style>
+        </Border.Resources>-->
+        <Label x:Name="contentLabel" >
+            <Image x:Name="imageContainer">
                 <Image.Source>
-                    <BitmapImage UriSource="./Resources/pawn_basic_black.png" />
+                    <BitmapImage UriSource="./Resources/pawn_basic_white.png" x:Name="pawnImage"/>
                 </Image.Source>
             </Image>
         </Label>

@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:TP_Othello"
         xmlns:customControl="clr-"
         mc:Ignorable="d"
-        Title="Othello" Height="450" Width="800">
-    <DockPanel>
+        Title="ArcOthello Grava Herbelin" Height="607.5" Width="827">
+    <DockPanel HorizontalAlignment="Stretch">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
                 
@@ -23,7 +23,7 @@
                 Player 2
             </TextBlock>
         </StackPanel>
-        <local:OthelloBoard>
+        <local:OthelloBoard Height="Auto" Width="Auto">
             
         </local:OthelloBoard>
         

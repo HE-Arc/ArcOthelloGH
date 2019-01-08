@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,24 +37,32 @@ namespace TP_Othello
         {
             InitializeComponent();
 
+            // We handle the hover and click events in this class
             CellClicked = new MouseButtonEventHandler(CellClickedHandler);
             CellHover = new MouseEventHandler(CellHoverHandler);
 
             InitGrid();
         }
 
+        /// <summary>
+        /// This method initializes the Grid's layout and the sub-usercontrols board cells
+        /// <see cref="BoardCell"/>
+        /// </summary>
         private void InitGrid()
         {
             boardCells = new BoardCell[(int)BOARD_DIMENSIONS.Height,(int)BOARD_DIMENSIONS.Width];
 
             for (int j = 0; j < BOARD_DIMENSIONS.Height; j++)
             {
-                GridBoard.RowDefinitions.Add(new RowDefinition());
+                RowDefinition rowDefinition = new RowDefinition();
+                rowDefinition.Height = GridLength.Auto;
+                GridBoard.RowDefinitions.Add(rowDefinition);
 
                 for (int i = 0; i < BOARD_DIMENSIONS.Width; i++)
                 {
                     ColumnDefinition columnDefinition = new ColumnDefinition();
                     columnDefinition.Width = GridLength.Auto;
+
                     GridBoard.ColumnDefinitions.Add(columnDefinition);
 
                     BoardCell boardCell = new BoardCell(CellClicked, CellHover);
@@ -67,6 +76,12 @@ namespace TP_Othello
             }
         }
 
+        /// <summary>
+        /// Returns a list of valid plays for the current player.
+        /// 
+        /// </summary>
+        /// <param name="playerValue"></param>
+        /// <returns>A list of BoardCell objects </returns>
         public List<BoardCell> GetValidPlays(int playerValue)
         {
             // check vertically
@@ -108,22 +123,33 @@ namespace TP_Othello
         /// This is the handler function of the click on a cell. It is called by the BoardCell objects
         /// </summary>
         /// <see cref="BoardCell"/>
-        /// <param name="Sender"></param>
-        /// <param name="e"></param>
+        /// <param name="Sender">Sender of the event, should be a BoardCell</param>
+        /// <param name="e">Event arguments</param>
         private void CellClickedHandler(object Sender, MouseEventArgs e)
         {
-
+            // if the sender object is a BoardCell we cast it and null checks (equivalent as ...  != null)
+            if(Sender is BoardCell senderCell)
+            {
+                Debug.WriteLine("Cell clicked");
+                Debug.WriteLine(senderCell.CellValue);
+                senderCell.Play(0);
+            }
         }
 
         /// <summary>
         /// This is the handler function of the hover on a cell. It is called by the BoardCell objects
         /// </summary>
         /// <see cref="BoardCell"/>
-        /// <param name="Sender"></param>
-        /// <param name="e"></param>
+        /// <param name="Sender">Sender of the event, should be a BoardCell</param>
+        /// <param name="e">Event arguments</param>
         private void CellHoverHandler(object Sender, MouseEventArgs e)
         {
-
+            // if the sender object is a BoardCell we cast it and null checks (equivalent as ...  != null)
+            if (Sender is BoardCell senderCell)
+            {
+                Debug.WriteLine("Cell hovered");
+                Debug.WriteLine(senderCell.CellValue);
+            }
         }
 
         #region IPlayable
