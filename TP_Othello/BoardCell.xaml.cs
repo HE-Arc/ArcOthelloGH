@@ -52,7 +52,7 @@ namespace TP_Othello
         {
             // debug
             this.imageContainer.Visibility = Visibility.Visible;
-            this.imageContainer.Source = new BitmapImage(new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/stephane_gobron.jpg"));
+            this.imageContainer.Source = new BitmapImage(new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/francois_tieche.jpg"));
             this.imageContainer.Stretch = Stretch.Fill;
             /*if (cellValue == 0)
                 pawnImage.UriSource = new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/stephane_gobron.jpg");

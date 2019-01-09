@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
+using System.Windows.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,6 +26,11 @@ namespace TP_Othello
     {
         private Size BOARD_DIMENSIONS = new Size(9, 7);
 
+        private Stopwatch[] playersTimer;
+        private DispatcherTimer refreshTimer;
+
+        private bool currentPlayerId;
+
         // Those are the event handlers passed to the cells so the event fired for them is handled here
         private event MouseButtonEventHandler CellClicked;
         private event MouseEventHandler CellHover;
@@ -41,7 +48,17 @@ namespace TP_Othello
             CellClicked = new MouseButtonEventHandler(CellClickedHandler);
             CellHover = new MouseEventHandler(CellHoverHandler);
 
+            refreshTimer = new DispatcherTimer();
+            refreshTimer.Interval = new TimeSpan(0, 0, 0, 1);
+            refreshTimer.Tick += new EventHandler(OnTimerEvent);
+
+            playersTimer = new Stopwatch[2];
+            playersTimer[0] = new Stopwatch();
+            playersTimer[1] = new Stopwatch();
+
             InitGrid();
+
+            refreshTimer.Start();
         }
 
         /// <summary>
@@ -149,6 +166,37 @@ namespace TP_Othello
             {
                 Debug.WriteLine("Cell hovered");
                 Debug.WriteLine(senderCell.CellValue);
+            }
+        }
+
+        /// <summary>
+        /// This function changes the variables to change turn
+        /// </summary>
+        private void ChangeTurn()
+        {
+            playersTimer[currentPlayerId ? 1 : 0].Stop();
+            currentPlayerId = !currentPlayerId;
+            playersTimer[currentPlayerId ? 1 : 0].Start();
+        }
+
+        /// <summary>
+        /// This function is raised by the players timer
+        /// </summary>
+        /// <param name="src"></param>
+        /// <param name="e"></param>
+        private void OnTimerEvent(object sender, EventArgs e)
+        {
+            // TODO - Bind time to Label
+            if (sender is DispatcherTimer timer)
+            {
+                if (currentPlayerId)
+                {
+                    String a = playersTimer[1].Elapsed.ToString("HH:mm:ss");
+                }
+                else
+                {
+                    String a = playersTimer[0].Elapsed.ToString("HH:mm:ss");
+                }
             }
         }
 
