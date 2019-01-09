@@ -186,12 +186,13 @@ namespace TP_Othello
         /// <param name="e"></param>
         private void OnTimerEvent(object sender, EventArgs e)
         {
-            // TODO - Bind time to Label
+            // TODO - Link text with timer
             if (sender is DispatcherTimer timer)
             {
                 if (currentPlayerId)
                 {
                     String a = playersTimer[1].Elapsed.ToString("HH:mm:ss");
+                    
                 }
                 else
                 {
