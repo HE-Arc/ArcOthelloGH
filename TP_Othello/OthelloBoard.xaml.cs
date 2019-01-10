@@ -58,7 +58,17 @@ namespace TP_Othello
 
             InitGrid();
 
-            refreshTimer.Start();
+            Game.Board b = new Game.Board(10, 10);
+
+            b.drawBo();
+            List<Game.Move> moves = b.GetPossibleMoves(true);
+
+            b.ApplyMove(moves[0]);
+            b.drawBo();
+
+
+            //refreshTimer.Start();
+
         }
 
         /// <summary>
@@ -147,8 +157,8 @@ namespace TP_Othello
             // if the sender object is a BoardCell we cast it and null checks (equivalent as ...  != null)
             if(Sender is BoardCell senderCell)
             {
-                Debug.WriteLine("Cell clicked");
-                Debug.WriteLine(senderCell.CellValue);
+                //Debug.WriteLine("Cell clicked");
+                //Debug.WriteLine(senderCell.CellValue);
                 senderCell.Play(0);
             }
         }
@@ -164,8 +174,8 @@ namespace TP_Othello
             // if the sender object is a BoardCell we cast it and null checks (equivalent as ...  != null)
             if (Sender is BoardCell senderCell)
             {
-                Debug.WriteLine("Cell hovered");
-                Debug.WriteLine(senderCell.CellValue);
+                //Debug.WriteLine("Cell hovered");
+                //Debug.WriteLine(senderCell.CellValue);
             }
         }
 

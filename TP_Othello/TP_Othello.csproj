@@ -40,6 +40,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -73,6 +74,8 @@
     <Compile Include="BoardCell.xaml.cs">
       <DependentUpon>BoardCell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Game\Board.cs" />
+    <Compile Include="Game\Move.cs" />
     <Compile Include="Game\Player.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
