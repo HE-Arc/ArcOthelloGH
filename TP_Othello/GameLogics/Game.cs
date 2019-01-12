@@ -78,6 +78,33 @@ namespace TP_Othello.GameLogics
             playersTimer = new Stopwatch[2];
             playersTimer[0] = new Stopwatch();
             playersTimer[1] = new Stopwatch();
+
+            //We get the center
+            int centerX = Convert.ToInt32(Math.Floor(BOARD_DIMENSIONS.Width / 2.0) - 1);
+            int centerY = Convert.ToInt32(Math.Floor(BOARD_DIMENSIONS.Height / 2.0) - 1);
+
+            //Initialize the center with the pawns
+            Move initMove1 = new Move(new Point(centerX, centerY), true);
+            List<Point> points1 = new List<Point>()
+            {
+                new Point(centerX + 1, centerY + 1),
+                new Point(0,0)
+            };
+
+            initMove1.AddChecksToInvert(points1);
+
+            Move initMove2 = new Move(new Point(centerX + 1, centerY), false);
+            List<Point> points2 = new List<Point>()
+            {
+                new Point(centerX, centerY + 1),
+                new Point(1,0),
+                new Point(2,0)
+            };
+
+            initMove2.AddChecksToInvert(points2);
+
+            PlayMove(initMove1);
+            PlayMove(initMove2);
         }
 
         public void StartGame()
@@ -98,10 +125,19 @@ namespace TP_Othello.GameLogics
 
             var nextPossibleMoves = this.logicalBoard.GetPossibleMoves(whitePlayerTurn);
 
-            // if the possible moves for the previous player and the current one are empty nobody can play anymore, it's the end of the game
-            if (!nextPossibleMoves.Any() && !currentPossibleMoves.Any())
+
+            if (!nextPossibleMoves.Any())
             {
-                // end game
+                // if the possible moves for the previous player and the current one are empty nobody can play anymore, it's the end of the game
+                if (!currentPossibleMoves.Any())
+                {
+                    // end game
+                }
+                // if only the current ones are empty it's to the other play again
+                else
+                {
+                    ChangeTurn();
+                }
             }
             else
             {
@@ -122,6 +158,25 @@ namespace TP_Othello.GameLogics
             // if the sender object is a BoardCell we cast it and null checks (equivalent to ...  != null)
             if (Sender is BoardCell senderCell)
             {
+                Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(senderCell.BoardPosition)).FirstOrDefault();
+                if(targetMove != null)
+                {
+                    PlayMove(targetMove);
+                    ChangeTurn();
+                }
+            }
+        }
+
+        private void PlayMove(Move move)
+        {
+            List<Point> cellsPosInvert = move.GetChecksToInvert();
+            cellsPosInvert.Add(move.position);
+
+            int playerId = move.playerId ? 1 : 0;
+            foreach(Point point in cellsPosInvert)
+            {
+                boardView.SetPawnCell(point, playerId);
+                logicalBoard.ApplyMove(move);
             }
         }
 
@@ -136,6 +191,10 @@ namespace TP_Othello.GameLogics
             // if the sender object is a BoardCell we cast it and null checks (equivalent to ...  != null)
             if (Sender is BoardCell senderCell)
             {
+                if(currentPossibleMoves.Any(move => move.position.Equals(senderCell.BoardPosition)))
+                {
+                    senderCell.Highlight();
+                }
                 /*var coords = CoordinatesOf(boardCells, senderCell);
                 if (coords.Item1 != -1 && currentPossibleMoves.Any(x => x.position.X == coords.Item1 && x.position.Y == coords.Item2))
                 {

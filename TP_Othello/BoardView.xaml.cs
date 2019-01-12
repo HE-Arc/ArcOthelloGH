@@ -40,8 +40,9 @@ namespace TP_Othello
         /// </summary>
         public void InitBoardView(System.Drawing.Size boardDimensions, MouseButtonEventHandler cellClickHandler, MouseEventHandler cellHoverHandler)
         {
-            boardCells = new BoardCell[boardDimensions.Height, boardDimensions.Width];
+            boardCells = new BoardCell[boardDimensions.Width, boardDimensions.Height];
 
+            // creating cells row by row but it doesn't really change anything
             for (int j = 0; j < boardDimensions.Height; j++)
             {
                 RowDefinition rowDefinition = new RowDefinition();
@@ -55,15 +56,21 @@ namespace TP_Othello
 
                     GridBoard.ColumnDefinitions.Add(columnDefinition);
 
-                    BoardCell boardCell = new BoardCell(cellClickHandler, cellHoverHandler);
+                    BoardCell boardCell = new BoardCell(cellClickHandler, cellHoverHandler, new System.Drawing.Point(i,j));
 
                     Grid.SetColumn(boardCell, i);
                     Grid.SetRow(boardCell, j);
 
                     GridBoard.Children.Add(boardCell);
-                    boardCells[j, i] = boardCell;
+                    boardCells[i, j] = boardCell;
                 }
             }
+        }
+
+        // TODO : have player ID refactored in some manner
+        public void SetPawnCell(System.Drawing.Point position, int playerID)
+        {
+            boardCells[position.X, position.Y].SetPawnPlayer(playerID);
         }
     }
 }

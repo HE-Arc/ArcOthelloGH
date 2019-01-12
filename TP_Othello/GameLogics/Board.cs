@@ -35,7 +35,7 @@ namespace TP_Othello.GameLogics
                 }
             }
 
-            //We get the center
+            /*//We get the center
             int centerX = Convert.ToInt32(Math.Floor(boardSize.Width / 2.0) - 1);
             int centerY = Convert.ToInt32(Math.Floor(boardSize.Height / 2.0) - 1);
 
@@ -47,7 +47,7 @@ namespace TP_Othello.GameLogics
 
             board[0, 0] = 1;
             board[1, 0] = 0;
-            board[2, 0] = 0;
+            board[2, 0] = 0;*/
         }
 
         /// <summary>

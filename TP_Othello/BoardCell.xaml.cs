@@ -21,12 +21,17 @@ namespace TP_Othello
     ///
     public partial class BoardCell : UserControl
     {
+        System.Drawing.Point boardPosition;
+
+        public System.Drawing.Point BoardPosition { get => boardPosition; private set => boardPosition = value; }
+
         /// <summary>
         /// Constructor for the BoardCell object
         /// </summary>
         /// <param name="cellClicked">The reference of the EventHandler that will handle the mouse clicks</param>
         /// <param name="cellHover">The reference of the EventHandler that will handle the mouse hovers</param>
-        public BoardCell(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover)
+        /// <param name="boardPosition">The position in the board, used so we don't need to search for it when it fires an event</param>
+        public BoardCell(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover, System.Drawing.Point boardPosition)
         {
             InitializeComponent();
 
@@ -37,6 +42,7 @@ namespace TP_Othello
             MouseLeave += new MouseEventHandler((sender, args) => ResetHighlight());
 
             this.imageContainer.Visibility = Visibility.Hidden;
+            this.BoardPosition = boardPosition;
         }
 
 
@@ -52,6 +58,26 @@ namespace TP_Othello
         public void Highlight()
         {
             this.contentLabel.Background = Brushes.DarkRed;
+        }
+
+        // TODO : clean this and refactor playerID 
+        public void SetPawnPlayer(int playerID)
+        {
+            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            switch(playerID)
+            {
+                case -1:
+                    this.imageContainer.Visibility = Visibility.Hidden;
+                    break;
+                case 0:
+                    this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_white.png"));
+                    imageContainer.Visibility = Visibility.Visible;
+                    break;
+                case 1:
+                    this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_black.png"));
+                    imageContainer.Visibility = Visibility.Visible;
+                    break;
+            }
         }
     }
 }
