@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TP_Othello.Game;
 
 
 namespace TP_Othello
@@ -24,12 +25,14 @@ namespace TP_Othello
     /// </summary>
     public partial class OthelloBoard : UserControl, IPlayable.IPlayable
     {
-        private Size BOARD_DIMENSIONS = new Size(9, 7);
+        private System.Drawing.Size BOARD_DIMENSIONS = new System.Drawing.Size(10, 10);
 
         private Stopwatch[] playersTimer;
         private DispatcherTimer refreshTimer;
 
         private bool currentPlayerId;
+
+        private List<Move> currentPossibleMoves;
 
         // Those are the event handlers passed to the cells so the event fired for them is handled here
         private event MouseButtonEventHandler CellClicked;
@@ -38,6 +41,7 @@ namespace TP_Othello
         // Cells components of the board
         // represented as a matrix (row, column)
         private BoardCell[,] boardCells;
+        private Board logicalBoard;
 
 
         public OthelloBoard()
@@ -58,15 +62,16 @@ namespace TP_Othello
 
             InitGrid();
 
-            Game.Board b = new Game.Board(10, 10);
+            logicalBoard = new Game.Board(BOARD_DIMENSIONS.Width, BOARD_DIMENSIONS.Height);
 
-            b.drawBo();
-            List<Game.Move> moves = b.GetPossibleMoves(true);
+            logicalBoard.drawBo();
+            List<Move> moves = logicalBoard.GetPossibleMoves(true);
 
-            b.ApplyMove(moves[0]);
-            b.drawBo();
+            var positionsToInvert = logicalBoard.ApplyMove(moves[0]);
 
+            logicalBoard.drawBo();
 
+            ChangeTurn();
             //refreshTimer.Start();
 
         }
@@ -77,7 +82,7 @@ namespace TP_Othello
         /// </summary>
         private void InitGrid()
         {
-            boardCells = new BoardCell[(int)BOARD_DIMENSIONS.Height,(int)BOARD_DIMENSIONS.Width];
+            boardCells = new BoardCell[BOARD_DIMENSIONS.Height, BOARD_DIMENSIONS.Width];
 
             for (int j = 0; j < BOARD_DIMENSIONS.Height; j++)
             {
@@ -102,6 +107,7 @@ namespace TP_Othello
                 }
             }
         }
+
 
         /// <summary>
         /// Returns a list of valid plays for the current player.
@@ -174,9 +180,34 @@ namespace TP_Othello
             // if the sender object is a BoardCell we cast it and null checks (equivalent as ...  != null)
             if (Sender is BoardCell senderCell)
             {
+                var coords = CoordinatesOf(boardCells, senderCell);
+                if (coords.Item1 != -1 && currentPossibleMoves.Any(x => x.position.X == coords.Item1 && x.position.Y == coords.Item2))
+                {
+                    Debug.Write("Cell is playable");
+                    senderCell.Highlight();
+                }
                 //Debug.WriteLine("Cell hovered");
                 //Debug.WriteLine(senderCell.CellValue);
             }
+        }
+
+        // temp solution
+        // TODO : delet this
+        public static Tuple<int, int> CoordinatesOf(BoardCell[,] matrix, BoardCell value)
+        {
+            int w = matrix.GetLength(0); // width
+            int h = matrix.GetLength(1); // height
+
+            for (int x = 0; x < w; ++x)
+            {
+                for (int y = 0; y < h; ++y)
+                {
+                    if (matrix[x, y].Equals(value))
+                        return Tuple.Create(x, y);
+                }
+            }
+
+            return Tuple.Create(-1, -1);
         }
 
         /// <summary>
@@ -186,7 +217,19 @@ namespace TP_Othello
         {
             playersTimer[currentPlayerId ? 1 : 0].Stop();
             currentPlayerId = !currentPlayerId;
-            playersTimer[currentPlayerId ? 1 : 0].Start();
+
+            var nextPossibleMoves = this.logicalBoard.GetPossibleMoves(currentPlayerId);
+
+            // if the possible moves for the previous player and the current one are empty nobody can play anymore, it's the end of the game
+            if (!nextPossibleMoves.Any() && !currentPossibleMoves.Any())
+            {
+                // end game
+            }
+            else
+            {
+                playersTimer[currentPlayerId ? 1 : 0].Start();
+                currentPossibleMoves = nextPossibleMoves;
+            }
         }
 
         /// <summary>
@@ -201,12 +244,12 @@ namespace TP_Othello
             {
                 if (currentPlayerId)
                 {
-                    String a = playersTimer[1].Elapsed.ToString("HH:mm:ss");
+                    string a = playersTimer[1].Elapsed.ToString("HH:mm:ss");
                     
                 }
                 else
                 {
-                    String a = playersTimer[0].Elapsed.ToString("HH:mm:ss");
+                    string a = playersTimer[0].Elapsed.ToString("HH:mm:ss");
                 }
             }
         }

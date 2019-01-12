@@ -66,7 +66,12 @@ namespace TP_Othello
         /// </summary>
         public void ResetHighlight()
         {
+            this.contentLabel.Background = Brushes.Transparent;
+        }
 
+        public void Highlight()
+        {
+            this.contentLabel.Background = Brushes.DarkRed;
         }
     }
 }

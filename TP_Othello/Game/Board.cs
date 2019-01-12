@@ -218,7 +218,7 @@ namespace TP_Othello.Game
         }
 
 
-        public void ApplyMove(Move move)
+        public List<Point> ApplyMove(Move move)
         {
             Point position = move.position;
             board[position.X, position.Y] = move.playerId ? 1 : 0;
@@ -230,6 +230,7 @@ namespace TP_Othello.Game
                 board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.playerId ? 1 : 0;
             }
 
+            return pawnToInvert;
         }
     }
 }
