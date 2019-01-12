@@ -30,6 +30,8 @@ namespace TP_Othello
             this.game = new Game(boardView);
 
             game.StartGame();
+
+            this.DataContext = game;
         }
     }
 }

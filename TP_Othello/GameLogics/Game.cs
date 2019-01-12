@@ -15,7 +15,7 @@ namespace TP_Othello.GameLogics
     /// <see cref="Board"/>
     /// <see cref="BoardView"/>
     /// </summary>
-    class Game
+    class Game : IPlayable.IPlayable
     {
         BoardView boardView;
         Board logicalBoard;
@@ -34,6 +34,31 @@ namespace TP_Othello.GameLogics
         private bool whitePlayerTurn;
         private List<Move> currentPossibleMoves;
 
+        #region BoundData
+        private string p1Time = "00:00:00", p2Time = "00:00:00";
+
+        private int scoreP1, scoreP2;
+
+        public string P1Time
+        {
+            get { return p1Time; }
+        }
+
+        public string P2Time
+        {
+            get { return p2Time; }
+        }
+
+        public int ScoreP1
+        {
+            get { return scoreP1; }
+        }
+
+        public int ScoreP2
+        {
+            get { return scoreP2; }
+        }
+        #endregion
 
         public Game(BoardView boardView)
         {
@@ -143,5 +168,44 @@ namespace TP_Othello.GameLogics
                 }
             }
         }
+
+
+        #region IPlayable
+        public string GetName()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsPlayable(int column, int line, bool isWhite)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool PlayMove(int column, int line, bool isWhite)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int[,] GetBoard()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetWhiteScore()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetBlackScore()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
