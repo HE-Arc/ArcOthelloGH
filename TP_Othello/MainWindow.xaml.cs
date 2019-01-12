@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using TP_Othello.GameLogics;
 
 namespace TP_Othello
 {
@@ -20,13 +21,15 @@ namespace TP_Othello
     /// </summary>
     public partial class MainWindow : Window
     {
-  
+        private Game game;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            this.game = new Game(boardView);
+
+            game.StartGame();
         }
-        
-  
     }
 }

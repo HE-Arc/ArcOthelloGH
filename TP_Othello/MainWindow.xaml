@@ -29,9 +29,9 @@
                 00:00:00
             </TextBlock>
         </StackPanel>
-        <local:OthelloBoard Height="Auto" Width="Auto">
+        <local:BoardView x:Name="boardView" Height="Auto" Width="Auto">
 
-        </local:OthelloBoard>
+        </local:BoardView>
 
     </DockPanel>
 </Window>

@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TP_Othello.Game
+namespace TP_Othello.GameLogics
 {
     class Player : System.Runtime.Serialization.ISerializable
     {

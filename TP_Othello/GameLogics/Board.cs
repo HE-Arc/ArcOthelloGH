@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
 
-namespace TP_Othello.Game
+namespace TP_Othello.GameLogics
 {
     class Board
     {
@@ -27,9 +27,9 @@ namespace TP_Othello.Game
         public void InitBoard()
         {
             //Fill the board with "emptiness"
-            for (int y = 0; y < boardSize.Width; y++)
+            for (int y = 0; y < boardSize.Height; y++)
             {
-                for (int x = 0; x < boardSize.Height; x++)
+                for (int x = 0; x < boardSize.Width; x++)
                 {
                     board[x, y] = -1;
                 }
@@ -119,9 +119,9 @@ namespace TP_Othello.Game
         public void drawBo()
         {
             Debug.Write("\n-------------------------\n");
-            for (int i = 0; i < board.GetLength(0); i++)
+            for (int i = 0; i < board.GetLength(1); i++)
             {
-                for (int j = 0; j < board.GetLength(1); j++)
+                for (int j = 0; j < board.GetLength(0); j++)
                 {
                     Debug.Write(board[j, i] + "\t");
                 }

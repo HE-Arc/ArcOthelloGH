@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections;
 using System.Drawing;
-namespace TP_Othello.Game
+namespace TP_Othello.GameLogics
 {
     class Move
     {

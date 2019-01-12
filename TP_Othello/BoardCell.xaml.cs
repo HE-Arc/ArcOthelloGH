@@ -21,8 +21,6 @@ namespace TP_Othello
     ///
     public partial class BoardCell : UserControl
     {
-        int cellValue = -1;
-
         /// <summary>
         /// Constructor for the BoardCell object
         /// </summary>
@@ -39,26 +37,8 @@ namespace TP_Othello
             MouseLeave += new MouseEventHandler((sender, args) => ResetHighlight());
 
             this.imageContainer.Visibility = Visibility.Hidden;
-            /*MouseLeave += new MouseEventHandler(delegate (Object o, MouseEventArgs e)
-            {
-
-                ResetDisplay();
-            });*/
         }
 
-        public int CellValue { get => cellValue; set => cellValue = value; }
-
-        public void Play(int cellValue)
-        {
-            // debug
-            this.imageContainer.Visibility = Visibility.Visible;
-            this.imageContainer.Source = new BitmapImage(new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/francois_tieche.jpg"));
-            this.imageContainer.Stretch = Stretch.Fill;
-            /*if (cellValue == 0)
-                pawnImage.UriSource = new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/stephane_gobron.jpg");
-            else
-                pawnImage.UriSource = new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/francois_tieche.jpg");*/
-        }
 
         /// <summary>
         /// This method removes the highlight of the cell. The cell is highlighted when the user hovers on it and can play here.
