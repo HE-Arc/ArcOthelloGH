@@ -221,13 +221,13 @@ namespace TP_Othello.GameLogics
         public List<Point> ApplyMove(Move move)
         {
             Point position = move.position;
-            board[position.X, position.Y] = move.playerId ? 1 : 0;
+            board[position.X, position.Y] = move.whitePlayer ? 1 : 0;
 
             List<Point> pawnToInvert = move.GetChecksToInvert();
 
             for(int i = 0; i < pawnToInvert.Count; i++)
             {
-                board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.playerId ? 1 : 0;
+                board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 1 : 0;
             }
 
             return pawnToInvert;

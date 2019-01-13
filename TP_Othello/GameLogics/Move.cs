@@ -11,12 +11,12 @@ namespace TP_Othello.GameLogics
     {
         private List<Point> checksToInvert;
         public Point position { get; }
-        public bool playerId { get; }
+        public bool whitePlayer { get; }
 
         public Move(Point position, bool playerId)
         {
             this.position = position;
-            this.playerId = playerId;
+            this.whitePlayer = playerId;
             checksToInvert = new List<Point>();
         }
 

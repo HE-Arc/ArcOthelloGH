@@ -7,6 +7,8 @@ using System.Windows.Input;
 using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Threading;
+using System.Timers;
+using System.ComponentModel;
 
 namespace TP_Othello.GameLogics
 {
@@ -15,7 +17,7 @@ namespace TP_Othello.GameLogics
     /// <see cref="Board"/>
     /// <see cref="BoardView"/>
     /// </summary>
-    class Game : IPlayable.IPlayable
+    class Game : IPlayable.IPlayable, INotifyPropertyChanged
     {
         BoardView boardView;
         Board logicalBoard;
@@ -25,38 +27,56 @@ namespace TP_Othello.GameLogics
         // Those are the event handlers passed to the cells so the event fired for them is handled here
         private event MouseButtonEventHandler CellClickedEvent;
         private event MouseEventHandler CellHoverEvent;
-
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private Stopwatch[] playersTimer;
-        private DispatcherTimer refreshTimer;
+        private Timer refreshTimer;
+
+
 
         // Current player related
         private bool whitePlayerTurn;
         private List<Move> currentPossibleMoves;
 
         #region BoundData
-        private string p1Time = "00:00:00", p2Time = "00:00:00";
+        private string timeWhite = "00:00:00", timeBlack = "00:00:00";
 
-        private int scoreP1, scoreP2;
+        private int scoreWhite, scoreBlack;
 
-        public string P1Time
+        public string TimeWhite
         {
-            get { return p1Time; }
+            get { return timeWhite; }
+            private set {
+                timeWhite = value;
+                NotifyPropertyChanged("TimeWhite");
+            }
+
+        }
+        public string TimeBlack
+        {
+            get { return timeBlack; }
+            private set {
+                timeBlack = value;
+                NotifyPropertyChanged("TimeBlack");
+            }
         }
 
-        public string P2Time
+        public int ScoreWhite
         {
-            get { return p2Time; }
+            get { return scoreWhite; }
+            private set {
+                scoreWhite = value;
+                NotifyPropertyChanged("ScoreWhite");
+            }
         }
 
-        public int ScoreP1
+        public int ScoreBlack
         {
-            get { return scoreP1; }
-        }
-
-        public int ScoreP2
-        {
-            get { return scoreP2; }
+            get { return scoreBlack; }
+            private set {
+                scoreBlack = value;
+                NotifyPropertyChanged("ScoreBlack");
+            }
         }
         #endregion
 
@@ -71,9 +91,9 @@ namespace TP_Othello.GameLogics
             boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
 
 
-            refreshTimer = new DispatcherTimer();
-            refreshTimer.Interval = new TimeSpan(0, 0, 0, 1);
-            refreshTimer.Tick += new EventHandler(OnTimerEvent);
+            refreshTimer = new Timer(1000);
+            refreshTimer.Elapsed += OnTimerEvent;
+            refreshTimer.AutoReset = true;
 
             playersTimer = new Stopwatch[2];
             playersTimer[0] = new Stopwatch();
@@ -105,15 +125,18 @@ namespace TP_Othello.GameLogics
 
             PlayMove(initMove1);
             PlayMove(initMove2);
+
         }
 
         public void StartGame()
         {
             whitePlayerTurn = true;
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
-            // start the timers and stuff
-        }
 
+
+            playersTimer[whitePlayerTurn ? 1 : 0].Start();
+            refreshTimer.Start();
+        }
 
         /// <summary>
         /// This function changes the variables to change turn
@@ -132,10 +155,12 @@ namespace TP_Othello.GameLogics
                 if (!currentPossibleMoves.Any())
                 {
                     // end game
+                    Debug.Write("Game ended");
                 }
                 // if only the current ones are empty it's to the other play again
                 else
                 {
+                    currentPossibleMoves = nextPossibleMoves;
                     ChangeTurn();
                 }
             }
@@ -172,10 +197,9 @@ namespace TP_Othello.GameLogics
             List<Point> cellsPosInvert = move.GetChecksToInvert();
             cellsPosInvert.Add(move.position);
 
-            int playerId = move.playerId ? 1 : 0;
             foreach(Point point in cellsPosInvert)
             {
-                boardView.SetPawnCell(point, playerId);
+                boardView.SetPawnCell(point, move.whitePlayer);
                 logicalBoard.ApplyMove(move);
             }
         }
@@ -211,21 +235,30 @@ namespace TP_Othello.GameLogics
         /// </summary>
         /// <param name="src"></param>
         /// <param name="e"></param>
-        private void OnTimerEvent(object sender, EventArgs e)
+        private void OnTimerEvent(object sender, ElapsedEventArgs e)
         {
             // TODO - Link text with timer
-            if (sender is DispatcherTimer timer)
+            if (sender is Timer timer)
             {
                 if (whitePlayerTurn)
                 {
-                    string a = playersTimer[1].Elapsed.ToString("HH:mm:ss");
-
+                    TimeWhite = playersTimer[1].Elapsed.ToString(@"hh\:mm\:ss");
                 }
                 else
                 {
-                    string a = playersTimer[0].Elapsed.ToString("HH:mm:ss");
+                    TimeBlack = playersTimer[0].Elapsed.ToString(@"hh\:mm\:ss");
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// https://www.c-sharpcorner.com/UploadFile/020f8f/data-binding-with-inotifypropertychanged-interface/
+        /// </summary>
+        /// <param name="propertyName"></param>
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
 

@@ -61,23 +61,19 @@ namespace TP_Othello
         }
 
         // TODO : clean this and refactor playerID 
-        public void SetPawnPlayer(int playerID)
+        public void SetPawnPlayer(bool whitePlayer)
         {
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            switch(playerID)
+            if(whitePlayer)
             {
-                case -1:
-                    this.imageContainer.Visibility = Visibility.Hidden;
-                    break;
-                case 0:
-                    this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_white.png"));
-                    imageContainer.Visibility = Visibility.Visible;
-                    break;
-                case 1:
-                    this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_black.png"));
-                    imageContainer.Visibility = Visibility.Visible;
-                    break;
+                this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_white.png"));
             }
+            else
+            {
+                this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_black.png"));
+            }
+            imageContainer.Visibility = Visibility.Visible;
+
         }
     }
 }

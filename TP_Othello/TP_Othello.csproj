@@ -77,7 +77,6 @@
     <Compile Include="GameLogics\Board.cs" />
     <Compile Include="GameLogics\Game.cs" />
     <Compile Include="GameLogics\Move.cs" />
-    <Compile Include="GameLogics\Player.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
