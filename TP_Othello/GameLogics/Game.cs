@@ -118,6 +118,28 @@ namespace TP_Othello.GameLogics
             
         }
 
+        private Game(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Turn", whitePlayerTurn);
+            info.AddValue("WhiteTime", GetPlayerStopwatch(true).Elapsed);
+            info.AddValue("BlackTime", GetPlayerStopwatch(false).Elapsed);
+            info.AddValue("Board", this.logicalBoard, typeof(Board));
+
+            this.logicalBoard = (Board)info.GetValue("Board", typeof(Board));
+
+            TimeSpan timeSpanWhite = new TimeSpan().Add((TimeSpan)info.GetValue("WhiteTime", typeof(TimeSpan)));
+            Stopwatch whiteStopwatch = GetPlayerStopwatch(true);
+            whiteStopwatch.Reset();
+            whiteStopwatch.Elapsed.Add(timeSpanWhite);
+
+            TimeSpan timeSpanBlack = new TimeSpan().Add((TimeSpan)info.GetValue("BlackTime", typeof(TimeSpan)));
+            Stopwatch blackStopwatch = GetPlayerStopwatch(false);
+            blackStopwatch.Reset();
+            blackStopwatch.Elapsed.Add(timeSpanBlack);
+
+            whitePlayerTurn = info.GetBoolean("Turn");
+        }
+
         public void StartGame()
         {
             InitBoard();
@@ -370,8 +392,9 @@ namespace TP_Othello.GameLogics
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Turn", whitePlayerTurn);
-            info.AddValue("WhiteTime", GetPlayerStopwatch(true));
-            info.AddValue("BlackTime", GetPlayerStopwatch(false));
+            info.AddValue("WhiteTime", GetPlayerStopwatch(true).Elapsed);
+            info.AddValue("BlackTime", GetPlayerStopwatch(false).Elapsed);
+            info.AddValue("Board", this.logicalBoard, typeof(Board));
         }
 
     }

@@ -44,17 +44,17 @@ namespace TP_Othello
         private void btnSaveGame_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
-            saveDialog.Filter = "Arc Othello files (*.arcgh)|All files (*.*)";
+            saveDialog.Filter = "Arc Othello files (*.arcgh)|*.arcgh|All files (*.*)|*.*";
             if(saveDialog.ShowDialog().HasValue == true)
             {
                 // using code from :
                 // https://www.dotnetperls.com/serialize-list
                 try
                 {
-                    using (Stream stream = File.Open(saveDialog.FileName, FileMode.Create))
+                    using (Stream stream = File.Open(saveDialog.FileName + ".arcgh", FileMode.Create))
                     {
-                        BinaryFormatter bin = new BinaryFormatter();
-                        bin.Serialize(stream, game);
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        binaryFormatter.Serialize(stream, game);
                     }
                 }
                 catch(IOException exception)
@@ -66,6 +66,25 @@ namespace TP_Othello
 
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Arc Othello files (*.arcgh)|*.arcgh|All files (*.*)|*.*";
+            if (openDialog.ShowDialog().HasValue)
+            {
+                try
+                {
+                    using (Stream stream = File.Open(openDialog.FileName, FileMode.Open))
+                    {
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        Game unserializeGame = (Game)binaryFormatter.Deserialize(stream);
+
+                        game.GetBoard();
+                    }
+                }
+                catch (IOException exception)
+                {
+                    MessageBox.Show($"Unable to load the game : {exception.Message}", "Load file error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
             Debug.Write("Load game");
         }
 

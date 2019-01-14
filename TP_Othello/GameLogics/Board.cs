@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 
 namespace TP_Othello.GameLogics
 {
+    [Serializable]
     class Board : ISerializable
     {
         private int[,] board;
@@ -20,6 +21,30 @@ namespace TP_Othello.GameLogics
             boardSize = new Size(width, height);
 
             InitBoard();
+        }
+        
+        private Board(SerializationInfo info, StreamingContext context)
+        {
+            Object boardObject = info.GetValue("Board", typeof(Board));
+
+            int[,] board = null;
+
+            if (boardObject is Array boardArray)
+            {
+                int columnCount = boardArray.GetUpperBound(0);
+                int rowCount = boardArray.GetLength(0);
+
+                board = new int[rowCount, columnCount];
+
+                for (int i = 0; i < rowCount; i++)
+                {
+                    for (int j = 0; j < columnCount; j++)
+                    {
+                        board[i, j] = Convert.ToInt32(boardArray.GetValue(i, j));
+                    }
+                }
+            }
+            this.board = board;
         }
 
         /// <summary>
