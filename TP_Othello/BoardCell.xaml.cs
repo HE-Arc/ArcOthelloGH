@@ -41,7 +41,6 @@ namespace TP_Othello
             // forging
             MouseLeave += new MouseEventHandler((sender, args) => ResetHighlight());
 
-            this.imageContainer.Visibility = Visibility.Hidden;
             this.BoardPosition = boardPosition;
         }
 
@@ -55,25 +54,21 @@ namespace TP_Othello
             this.contentLabel.Background = Brushes.Transparent;
         }
 
-        public void Highlight()
+        public void Highlight(bool whitePlayer)
         {
             this.contentLabel.Background = Brushes.DarkRed;
         }
 
-        // TODO : clean this and refactor playerID 
         public void SetPawnPlayer(bool whitePlayer)
         {
-            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            if (whitePlayer)
+            if(whitePlayer)
             {
-                this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_white.png"));
+                this.imageContainer.Style = this.FindResource("PawnWhite") as Style;
             }
             else
             {
-                this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_black.png"));
+                this.imageContainer.Style = this.FindResource("PawnBlack") as Style;
             }
-            imageContainer.Visibility = Visibility.Visible;
-
         }
 
         public void UnsetPawnPlayer()

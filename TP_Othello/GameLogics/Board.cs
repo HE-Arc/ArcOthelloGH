@@ -5,10 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Diagnostics;
+using System.Runtime.Serialization;
 
 namespace TP_Othello.GameLogics
 {
-    class Board
+    class Board : ISerializable
     {
         private int[,] board;
         private Size boardSize;
@@ -230,6 +231,11 @@ namespace TP_Othello.GameLogics
             }
 
             return pawnToInvert;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Board", this.board);
         }
     }
 }

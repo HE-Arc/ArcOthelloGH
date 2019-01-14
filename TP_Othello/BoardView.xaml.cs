@@ -44,20 +44,30 @@ namespace TP_Othello
             boardCells = new BoardCell[boardDimensions.Width, boardDimensions.Height];
 
             // creating cells row by row but it doesn't really change anything
-            for (int j = 0; j < boardDimensions.Height; j++)
+
+
+            for(int i = 0; i < boardDimensions.Height; i++)
             {
                 RowDefinition rowDefinition = new RowDefinition();
-                //rowDefinition.Height = GridLength.Auto;
-                rowDefinition.Height = new GridLength(1, GridUnitType.Star);
-                GridBoard.RowDefinitions.Add(rowDefinition);
 
+                rowDefinition.Height = new GridLength(1.0, GridUnitType.Star);
+
+                GridBoard.RowDefinitions.Add(rowDefinition);
+            }
+
+            for(int i = 0; i < boardDimensions.Width; i++)
+            {
+                ColumnDefinition columnDefinition = new ColumnDefinition();
+                //columnDefinition.Width = new GridLength(1.0, GridUnitType.Star);
+
+                GridBoard.ColumnDefinitions.Add(columnDefinition);
+            }
+
+
+            for (int j = 0; j < boardDimensions.Height; j++)
+            { 
                 for (int i = 0; i < boardDimensions.Width; i++)
                 {
-                    ColumnDefinition columnDefinition = new ColumnDefinition();
-                    // columnDefinition.Width = GridLength.Auto;
-                    columnDefinition.Width = new GridLength(1, GridUnitType.Star);
-                    GridBoard.ColumnDefinitions.Add(columnDefinition);
-
                     BoardCell boardCell = new BoardCell(cellClickHandler, cellHoverHandler, new System.Drawing.Point(i, j));
 
                     Grid.SetColumn(boardCell, i);
