@@ -15,6 +15,7 @@ using System.Windows.Shapes;
 using System.IO;
 using Microsoft.Win32;
 using System.Diagnostics;
+using TP_Othello.GameLogics;
 
 namespace TP_Othello
 {
@@ -23,10 +24,17 @@ namespace TP_Othello
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Game game;
 
         public MainWindow()
         {
             InitializeComponent();
+
+            this.game = new Game(boardView);
+
+            game.StartGame();
+
+            this.DataContext = game;
         }
 
         private void btnOpenCredits_Click(object sender, RoutedEventArgs e)

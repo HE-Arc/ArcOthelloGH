@@ -21,14 +21,17 @@ namespace TP_Othello
     ///
     public partial class BoardCell : UserControl
     {
-        int cellValue = -1;
+        System.Drawing.Point boardPosition;
+
+        public System.Drawing.Point BoardPosition { get => boardPosition; private set => boardPosition = value; }
 
         /// <summary>
         /// Constructor for the BoardCell object
         /// </summary>
         /// <param name="cellClicked">The reference of the EventHandler that will handle the mouse clicks</param>
         /// <param name="cellHover">The reference of the EventHandler that will handle the mouse hovers</param>
-        public BoardCell(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover)
+        /// <param name="boardPosition">The position in the board, used so we don't need to search for it when it fires an event</param>
+        public BoardCell(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover, System.Drawing.Point boardPosition)
         {
             InitializeComponent();
 
@@ -39,26 +42,9 @@ namespace TP_Othello
             MouseLeave += new MouseEventHandler((sender, args) => ResetHighlight());
 
             this.imageContainer.Visibility = Visibility.Hidden;
-            /*MouseLeave += new MouseEventHandler(delegate (Object o, MouseEventArgs e)
-            {
-
-                ResetDisplay();
-            });*/
+            this.BoardPosition = boardPosition;
         }
 
-        public int CellValue { get => cellValue; set => cellValue = value; }
-
-        public void Play(int cellValue)
-        {
-            // debug
-            this.imageContainer.Visibility = Visibility.Visible;
-            this.imageContainer.Source = new BitmapImage(new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/stephane_gobron.jpg"));
-            this.imageContainer.Stretch = Stretch.Fill;
-            /*if (cellValue == 0)
-                pawnImage.UriSource = new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/stephane_gobron.jpg");
-            else
-                pawnImage.UriSource = new System.Uri("http://www.he-arc.ch/sites/www.he-arc.ch/files/ING/competences/collaborateurs/francois_tieche.jpg");*/
-        }
 
         /// <summary>
         /// This method removes the highlight of the cell. The cell is highlighted when the user hovers on it and can play here.
@@ -66,6 +52,27 @@ namespace TP_Othello
         /// </summary>
         public void ResetHighlight()
         {
+            this.contentLabel.Background = Brushes.Transparent;
+        }
+
+        public void Highlight()
+        {
+            this.contentLabel.Background = Brushes.DarkRed;
+        }
+
+        // TODO : clean this and refactor playerID 
+        public void SetPawnPlayer(bool whitePlayer)
+        {
+            string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            if(whitePlayer)
+            {
+                this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_white.png"));
+            }
+            else
+            {
+                this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_black.png"));
+            }
+            imageContainer.Visibility = Visibility.Visible;
 
         }
     }
