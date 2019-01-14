@@ -61,6 +61,16 @@ namespace TP_Othello.GameLogics
             }
         }
 
+        /*public string P1Score
+        {
+            get { return ScoreWhite.ToString(); }
+        }
+
+        public string P2Score
+        {
+            get { return ScoreBlack.ToString(); }
+        }*/
+
         public int ScoreWhite
         {
             get { return scoreWhite; }
@@ -125,6 +135,8 @@ namespace TP_Othello.GameLogics
 
             PlayMove(initMove1);
             PlayMove(initMove2);
+
+            ScoreBlack = 2;
 
         }
 
@@ -217,7 +229,7 @@ namespace TP_Othello.GameLogics
             {
                 if(currentPossibleMoves.Any(move => move.position.Equals(senderCell.BoardPosition)))
                 {
-                    senderCell.Highlight();
+                    senderCell.Highlight(whitePlayerTurn);
                 }
                 /*var coords = CoordinatesOf(boardCells, senderCell);
                 if (coords.Item1 != -1 && currentPossibleMoves.Any(x => x.position.X == coords.Item1 && x.position.Y == coords.Item2))
@@ -258,7 +270,8 @@ namespace TP_Othello.GameLogics
         /// <param name="propertyName"></param>
         protected void NotifyPropertyChanged(string propertyName)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            if(PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
 
 

@@ -1,0 +1,28 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:TP_Othello.Resources">
+    <!--
+    Style for the base state. Image has a value but is hidden because we can't init (I think) with a null image
+    -->
+    <Style x:Key="PawnBaseState" TargetType="Image">
+        <Setter Property="Source" Value="pawn_basic_white.png"/>
+        <Setter Property="Visibility" Value="Hidden"/>
+    </Style>
+    
+    <!--
+    The style with the black and white pawn are based on the same one which has the image's visibility and maybe future changes
+    -->
+    <Style x:Key="PawnPlayed" TargetType="Image">
+        <Setter Property="Visibility" Value="Visible"/>
+    </Style>
+    <Style x:Key="PawnWhite" TargetType="Image" BasedOn="{StaticResource PawnPlayed}">
+        <Setter Property="Source" Value="pawn_basic_white.png"/>
+    </Style>
+    <Style x:Key="PawnBlack" TargetType="Image" BasedOn="{StaticResource PawnPlayed}">
+        <Setter Property="Source" Value="pawn_basic_black.png"/>
+    </Style>
+
+    <Style x:Key="CellHighlight" TargetType="Image">
+        <Setter Property="Opacity" Value="0.5"/>
+    </Style>
+</ResourceDictionary>

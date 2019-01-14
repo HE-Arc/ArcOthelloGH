@@ -10,6 +10,7 @@
     <UserControl.Background>
         <ImageBrush ImageSource="/Resources/carpet.jpg" Stretch="UniformToFill"/>
     </UserControl.Background>
+
     <Border BorderThickness="2" BorderBrush="Black">
         <!--<Border.Resources>
             <Style TargetType="Border" x:Key="Cell_Hovered">
@@ -19,11 +20,8 @@
 
             </Style>
         </Border.Resources>-->
-        <Label x:Name="contentLabel" >
-            <Image x:Name="imageContainer">
-                <Image.Source>
-                    <BitmapImage UriSource="./Resources/pawn_basic_white.png" x:Name="pawnImage"/>
-                </Image.Source>
+        <Label x:Name="contentLabel">
+            <Image x:Name="imageContainer" Style="{StaticResource PawnBaseState}">
             </Image>
         </Label>
     </Border>
