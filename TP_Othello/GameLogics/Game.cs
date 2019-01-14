@@ -9,15 +9,17 @@ using System.Diagnostics;
 using System.Windows.Threading;
 using System.Timers;
 using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace TP_Othello.GameLogics
 {
+    [Serializable]
     /// <summary>
     /// This class is the main engine for the Othello game. It synchronizes the board display and the logic behind.
     /// <see cref="Board"/>
     /// <see cref="BoardView"/>
     /// </summary>
-    class Game : IPlayable.IPlayable, INotifyPropertyChanged
+    class Game : IPlayable.IPlayable, INotifyPropertyChanged, ISerializable
     {
         BoardView boardView;
         Board logicalBoard;
@@ -123,7 +125,7 @@ namespace TP_Othello.GameLogics
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
 
 
-            playersTimer[whitePlayerTurn ? 1 : 0].Start();
+            GetPlayerStopwatch(whitePlayerTurn).Start();
             refreshTimer.Start();
         }
 
@@ -156,11 +158,10 @@ namespace TP_Othello.GameLogics
         /// </summary>
         private void ChangeTurn()
         {
-            playersTimer[whitePlayerTurn ? 1 : 0].Stop();
+            GetPlayerStopwatch(whitePlayerTurn).Stop();
             whitePlayerTurn = !whitePlayerTurn;
 
             var nextPossibleMoves = this.logicalBoard.GetPossibleMoves(whitePlayerTurn);
-
 
             if (!nextPossibleMoves.Any())
             {
@@ -179,9 +180,14 @@ namespace TP_Othello.GameLogics
             }
             else
             {
-                playersTimer[whitePlayerTurn ? 1 : 0].Start();
+                GetPlayerStopwatch(whitePlayerTurn).Start();
                 currentPossibleMoves = nextPossibleMoves;
             }
+        }
+
+        private Stopwatch GetPlayerStopwatch(bool whitePlayer)
+        {
+            return playersTimer[whitePlayer ? 0 : 1];
         }
 
 
@@ -271,11 +277,11 @@ namespace TP_Othello.GameLogics
             {
                 if (whitePlayerTurn)
                 {
-                    TimeWhite = playersTimer[1].Elapsed.ToString(@"hh\:mm\:ss");
+                    TimeWhite = GetPlayerStopwatch(whitePlayerTurn).Elapsed.ToString(@"hh\:mm\:ss");
                 }
                 else
                 {
-                    TimeBlack = playersTimer[0].Elapsed.ToString(@"hh\:mm\:ss");
+                    TimeBlack = GetPlayerStopwatch(whitePlayerTurn).Elapsed.ToString(@"hh\:mm\:ss");
                 }
             }
         }
@@ -359,7 +365,14 @@ namespace TP_Othello.GameLogics
         {
             throw new NotImplementedException();
         }
-
         #endregion
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Turn", whitePlayerTurn);
+            info.AddValue("WhiteTime", GetPlayerStopwatch(true));
+            info.AddValue("BlackTime", GetPlayerStopwatch(false));
+        }
+
     }
 }

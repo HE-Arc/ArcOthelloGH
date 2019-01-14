@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:TP_Othello"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" 
-             Foreground="White">
+             Foreground="White"> 
              
     <UserControl.Background>
         <ImageBrush ImageSource="/Resources/carpet.jpg" Stretch="UniformToFill"/>

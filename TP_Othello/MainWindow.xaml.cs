@@ -16,6 +16,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Diagnostics;
 using TP_Othello.GameLogics;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace TP_Othello
 {
@@ -42,11 +43,24 @@ namespace TP_Othello
 
         private void btnSaveGame_Click(object sender, RoutedEventArgs e)
         {
-            int[,] serializableBoard = { { 1, 2, 3, 4 },{ 5, 6, 7, 8 },{ 9, 10, 11, 12 } };
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Filter = "Arc Othello files (*.arcgh)|All files (*.*)";
             if(saveDialog.ShowDialog().HasValue == true)
             {
+                // using code from :
+                // https://www.dotnetperls.com/serialize-list
+                try
+                {
+                    using (Stream stream = File.Open(saveDialog.FileName, FileMode.Create))
+                    {
+                        BinaryFormatter bin = new BinaryFormatter();
+                        bin.Serialize(stream, game);
+                    }
+                }
+                catch(IOException exception)
+                {
+                    MessageBox.Show($"Unable to save the game : {exception.Message}", "Save file error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
