@@ -6,6 +6,10 @@
              xmlns:local="clr-namespace:TP_Othello"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Background>
+        <ImageBrush ImageSource="/Resources/carpet.jpg" Stretch="UniformToFill"/>
+    </UserControl.Background>
     <Border BorderThickness="2" BorderBrush="Black">
         <!--<Border.Resources>
             <Style TargetType="Border" x:Key="Cell_Hovered">
