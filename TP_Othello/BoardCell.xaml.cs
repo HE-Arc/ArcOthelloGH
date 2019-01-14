@@ -70,5 +70,10 @@ namespace TP_Othello
                 this.imageContainer.Style = this.FindResource("PawnBlack") as Style;
             }
         }
+
+        public void UnsetPawnPlayer()
+        {
+            imageContainer.Visibility = Visibility.Hidden;
+        }
     }
 }

@@ -56,7 +56,7 @@ namespace TP_Othello
 
                     GridBoard.ColumnDefinitions.Add(columnDefinition);
 
-                    BoardCell boardCell = new BoardCell(cellClickHandler, cellHoverHandler, new System.Drawing.Point(i,j));
+                    BoardCell boardCell = new BoardCell(cellClickHandler, cellHoverHandler, new System.Drawing.Point(i, j));
 
                     Grid.SetColumn(boardCell, i);
                     Grid.SetRow(boardCell, j);
@@ -71,6 +71,11 @@ namespace TP_Othello
         public void SetPawnCell(System.Drawing.Point position, bool whitePlayer)
         {
             boardCells[position.X, position.Y].SetPawnPlayer(whitePlayer);
+        }
+
+        public void UnsetPawnCell(System.Drawing.Point position)
+        {
+            boardCells[position.X, position.Y].UnsetPawnPlayer();
         }
     }
 }

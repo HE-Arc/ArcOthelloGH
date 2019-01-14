@@ -28,6 +28,12 @@
                         <TextBlock>About</TextBlock>
                     </StackPanel>
                 </Button>
+                <Button ToolTip="Undo last move" x:Name="btnUndo" Click="btnUndo_Click" IsEnabled="True">
+                    <StackPanel>
+                        <Image Source="./Resources/undo.png" Height="16"></Image>
+                        <TextBlock>Undo</TextBlock>
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <StackPanel DockPanel.Dock="Left" Margin="0,0.2,0,-0.4">
@@ -35,7 +41,7 @@
                 Player 1
             </TextBlock>
             <TextBlock x:Uid="timerP1"  Margin="5,0,5,0" Text="{Binding TimeWhite, Mode= OneWay}" />
-            <TextBlock x:Uid="scoreP1"  Margin="5,0,5,0" Text="{Binding ScoreWhite, Mode= OneWay}" />
+            <TextBlock x:Uid="scoreP1"  Margin="5,0,5,0" Text="{Binding ScoreWhite, Mode=OneWay}" />
         </StackPanel>
         <StackPanel DockPanel.Dock="Right">
             <TextBlock Margin="5,0,5,0">
