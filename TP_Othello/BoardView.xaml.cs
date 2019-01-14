@@ -96,5 +96,15 @@ namespace TP_Othello
             //this.GridBoard.Height = e.NewSize.Height;
             //this.GridBoard.Width = e.NewSize.Width;
         }
+
+        public void SetMoveHint(System.Drawing.Point position)
+        {
+            boardCells[position.X, position.Y].SetMoveHint();
+        }
+
+        internal void ResetHint(System.Drawing.Point position)
+        {
+            boardCells[position.X, position.Y].ResetHint();
+        }
     }
 }

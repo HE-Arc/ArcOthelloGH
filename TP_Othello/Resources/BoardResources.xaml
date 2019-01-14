@@ -22,12 +22,69 @@
         <Setter Property="Source" Value="pawn_basic_black.png"/>
     </Style>
 
-    <Style x:Key="CellHighlight" TargetType="Image">
-        <Setter Property="Opacity" Value="0.5"/>
+    <Style x:Key="CellBaseState" TargetType="Label">
+        <Setter Property="Opacity" Value="1.0"/>
+        <Setter Property="Background"  Value="Transparent"/>
+
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Label.MouseUp">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Label.Opacity)"
+                                To="1.0" Duration="0:0:0.1" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </Style.Triggers>
     </Style>
 
-    <Style x:Key="CellGlowing" TargetType="Image">
-        <Setter></Setter>
-          
+    <Style x:Key="CellHint" TargetType="Label">
+        <Setter Property="Background"  Value="GhostWhite"/>
+        <Setter Property="Opacity" Value="0.6"/>
+
+
+        <Style.Triggers>
+            <!-- Animates the button's opacity on mouse over. -->
+            <EventTrigger RoutedEvent="Label.MouseEnter">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Label.Opacity)"
+                                From="0.3" To="0.6" Duration="0:0:0.7" AutoReverse="True"
+                                RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+
+            <EventTrigger RoutedEvent="Label.MouseLeave">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Label.Opacity)"
+                                To="0.6" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+
+            <!--<EventTrigger RoutedEvent="Label.Click">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                                Storyboard.TargetProperty="(Label.Opacity)"
+                                To="0.6" Duration="0:0:0.2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>-->
+            
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>

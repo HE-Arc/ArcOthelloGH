@@ -21,7 +21,7 @@
 
             </Style>
         </Border.Resources>-->
-        <Label x:Name="contentLabel">
+        <Label x:Name="contentLabel" Style="{StaticResource CellBaseState}">
             <Image x:Name="imageContainer" Style="{StaticResource PawnBaseState}">
             </Image>
         </Label>

@@ -163,6 +163,11 @@ namespace TP_Othello.GameLogics
 
             var nextPossibleMoves = this.logicalBoard.GetPossibleMoves(whitePlayerTurn);
 
+            foreach(Move m in nextPossibleMoves)
+            {
+                boardView.SetMoveHint(m.position);
+            }
+
             if (!nextPossibleMoves.Any())
             {
                 // if the possible moves for the previous player and the current one are empty nobody can play anymore, it's the end of the game
@@ -205,8 +210,15 @@ namespace TP_Othello.GameLogics
                 Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(senderCell.BoardPosition)).FirstOrDefault();
                 if(targetMove != null)
                 {
+
+                    foreach (Move m in currentPossibleMoves)
+                    {
+                        boardView.ResetHint(m.position);
+                    }
+
                     playedMovesStack.Add(targetMove);
                     PlayMove(targetMove);
+
                     ChangeTurn();
                 }
             }
@@ -252,7 +264,7 @@ namespace TP_Othello.GameLogics
             {
                 if(currentPossibleMoves.Any(move => move.position.Equals(senderCell.BoardPosition)))
                 {
-                    senderCell.Highlight(whitePlayerTurn);
+                    //senderCell.Highlight(whitePlayerTurn);
                 }
                 /*var coords = CoordinatesOf(boardCells, senderCell);
                 if (coords.Item1 != -1 && currentPossibleMoves.Any(x => x.position.X == coords.Item1 && x.position.Y == coords.Item2))

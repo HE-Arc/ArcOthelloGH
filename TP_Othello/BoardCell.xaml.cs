@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace TP_Othello
             MouseEnter += cellHover;
 
             // forging
-            MouseLeave += new MouseEventHandler((sender, args) => ResetHighlight());
+            //MouseLeave += new MouseEventHandler((sender, args) => ResetHighlight());
 
             this.BoardPosition = boardPosition;
         }
@@ -49,9 +50,15 @@ namespace TP_Othello
         /// This method removes the highlight of the cell. The cell is highlighted when the user hovers on it and can play here.
         /// It is called when the user's mouse leaves the cell or the user has played.
         /// </summary>
-        public void ResetHighlight()
+        public void ResetHint()
         {
-            this.contentLabel.Background = Brushes.Transparent;
+            
+            this.contentLabel.Style = FindResource("CellBaseState") as Style;
+        }
+
+        public void SetMoveHint()
+        {
+            this.contentLabel.Style = FindResource("CellHint") as Style;
         }
 
         public void Highlight(bool whitePlayer)
@@ -61,6 +68,8 @@ namespace TP_Othello
 
         public void SetPawnPlayer(bool whitePlayer)
         {
+            //contentLabel.Style = FindResource("style1") as Style;
+            
             if(whitePlayer)
             {
                 this.imageContainer.Style = this.FindResource("PawnWhite") as Style;
