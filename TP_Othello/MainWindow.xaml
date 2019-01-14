@@ -10,7 +10,24 @@
     <DockPanel HorizontalAlignment="Stretch">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                
+                <Button x:Name="btnLoadGame" ToolTip="Load a game" Margin="3" Click="btnLoadGame_Click" IsEnabled="True">
+                    <StackPanel>
+                        <Image Source="./Resources/open.ico" Height="16"></Image>
+                        <TextBlock Foreground="Black">Load</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button x:Name="btnSaveGame" ToolTip="Save the current game" Margin="3" Click="btnSaveGame_Click" IsEnabled="True">
+                    <StackPanel>
+                        <Image Source="./Resources/save.ico" Height="16"></Image>
+                        <TextBlock Foreground="Black">Save</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="About this app..." x:Name="btnOpenCredits" Click="btnOpenCredits_Click" IsEnabled="True">
+                    <StackPanel>
+                        <Image Source="./Resources/mark.png" Height="16"></Image>
+                        <TextBlock>About</TextBlock>
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </ToolBarTray>
         <StackPanel DockPanel.Dock="Left">
@@ -23,7 +40,7 @@
                 Player 2
             </TextBlock>
         </StackPanel>
-        <local:OthelloBoard Height="Auto" Width="Auto">
+        <local:OthelloBoard x:Name="board" Height="Auto" Width="Auto">
             
         </local:OthelloBoard>
         

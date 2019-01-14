@@ -12,6 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
+using Microsoft.Win32;
+using System.Diagnostics;
 
 namespace TP_Othello
 {
@@ -20,13 +23,30 @@ namespace TP_Othello
     /// </summary>
     public partial class MainWindow : Window
     {
-  
 
         public MainWindow()
         {
             InitializeComponent();
         }
-        
-  
+
+        private void btnOpenCredits_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("Othello Game made for the C# .NET and AI course HE-Arc 2018-2019.\nGrava Maxime, Herbelin Ludovic", "About this app");
+        }
+
+        private void btnSaveGame_Click(object sender, RoutedEventArgs e)
+        {
+            int[,] serializableBoard = { { 1, 2, 3, 4 },{ 5, 6, 7, 8 },{ 9, 10, 11, 12 } };
+            SaveFileDialog saveDialog = new SaveFileDialog();
+            saveDialog.Filter = "Arc Othello files (*.arcgh)|All files (*.*)";
+            if(saveDialog.ShowDialog().HasValue == true)
+            {
+            }
+        }
+
+        private void btnLoadGame_Click(object sender, RoutedEventArgs e)
+        {
+            Debug.Write("Load game");
+        }
     }
 }

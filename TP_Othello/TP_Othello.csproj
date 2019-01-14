@@ -119,5 +119,12 @@
     <Resource Include="Resources\pawn_basic_black.png" />
     <Resource Include="Resources\pawn_basic_white.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\open.ico" />
+    <Resource Include="Resources\save.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\mark.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
