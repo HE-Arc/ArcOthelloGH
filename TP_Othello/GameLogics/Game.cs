@@ -22,7 +22,7 @@ namespace TP_Othello.GameLogics
         BoardView boardView;
         Board logicalBoard;
 
-        private Size BOARD_DIMENSIONS = new System.Drawing.Size(9, 7);
+        private Size BOARD_DIMENSIONS = new System.Drawing.Size(10, 10);
 
         // Those are the event handlers passed to the cells so the event fired for them is handled here
         private event MouseButtonEventHandler CellClickedEvent;
