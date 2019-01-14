@@ -34,20 +34,6 @@ namespace TP_Othello.GameLogics
                     board[x, y] = -1;
                 }
             }
-
-            /*//We get the center
-            int centerX = Convert.ToInt32(Math.Floor(boardSize.Width / 2.0) - 1);
-            int centerY = Convert.ToInt32(Math.Floor(boardSize.Height / 2.0) - 1);
-
-            //Initialize the center with the pawns
-            board[centerX, centerY] = 1;
-            board[centerX + 1, centerY] = 0;
-            board[centerX, centerY + 1] = 0;
-            board[centerX + 1, centerY + 1] = 1;
-
-            board[0, 0] = 1;
-            board[1, 0] = 0;
-            board[2, 0] = 0;*/
         }
 
         /// <summary>
@@ -192,7 +178,7 @@ namespace TP_Othello.GameLogics
                     }
 
                     //We don't have to continue from the players pawn position, because we already evaluated the pawns between it and spree position
-                    i = spree;
+                    i = spree-1;
                 }
             }
 
@@ -218,7 +204,7 @@ namespace TP_Othello.GameLogics
         }
 
 
-        public List<Point> ApplyMove(Move move)
+        public void ApplyMove(Move move)
         {
             Point position = move.position;
             board[position.X, position.Y] = move.whitePlayer ? 1 : 0;
@@ -228,6 +214,19 @@ namespace TP_Othello.GameLogics
             for(int i = 0; i < pawnToInvert.Count; i++)
             {
                 board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 1 : 0;
+            }
+        }
+
+        public List<Point> UndoMove(Move move)
+        {
+            Point position = move.position;
+            board[position.X, position.Y] = -1;
+
+            List<Point> pawnToInvert = move.GetChecksToInvert();
+            
+            for (int i = 0; i < pawnToInvert.Count; i++)
+            {
+                board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 0 : 1;
             }
 
             return pawnToInvert;

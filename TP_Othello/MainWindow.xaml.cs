@@ -29,12 +29,10 @@ namespace TP_Othello
         public MainWindow()
         {
             InitializeComponent();
-
+            
             this.game = new Game(boardView);
-
-            game.StartGame();
-
             this.DataContext = game;
+            game.StartGame();
         }
 
         private void btnOpenCredits_Click(object sender, RoutedEventArgs e)
@@ -55,6 +53,11 @@ namespace TP_Othello
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
         {
             Debug.Write("Load game");
+        }
+
+        private void btnUndo_Click(object sender, RoutedEventArgs e)
+        {
+            game.UndoLastMove();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace TP_Othello
         public void SetPawnPlayer(bool whitePlayer)
         {
             string path = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            if(whitePlayer)
+            if (whitePlayer)
             {
                 this.imageContainer.Source = new BitmapImage(new Uri(path + "../../../../Resources/pawn_basic_white.png"));
             }
@@ -74,6 +74,11 @@ namespace TP_Othello
             }
             imageContainer.Visibility = Visibility.Visible;
 
+        }
+
+        public void UnsetPawnPlayer()
+        {
+            imageContainer.Visibility = Visibility.Hidden;
         }
     }
 }

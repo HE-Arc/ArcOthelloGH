@@ -32,6 +32,9 @@ namespace TP_Othello.GameLogics
         private Stopwatch[] playersTimer;
         private Timer refreshTimer;
 
+        
+
+        private List<Move> playedMovesStack;
 
 
         // Current player related
@@ -41,7 +44,7 @@ namespace TP_Othello.GameLogics
         #region BoundData
         private string timeWhite = "00:00:00", timeBlack = "00:00:00";
 
-        private int scoreWhite, scoreBlack;
+        private int scoreWhite = 0, scoreBlack = 0;
 
         public string TimeWhite
         {
@@ -90,6 +93,7 @@ namespace TP_Othello.GameLogics
 
             boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
 
+            playedMovesStack = new List<Move>();
 
             refreshTimer = new Timer(1000);
             refreshTimer.Elapsed += OnTimerEvent;
@@ -99,43 +103,42 @@ namespace TP_Othello.GameLogics
             playersTimer[0] = new Stopwatch();
             playersTimer[1] = new Stopwatch();
 
-            //We get the center
-            int centerX = Convert.ToInt32(Math.Floor(BOARD_DIMENSIONS.Width / 2.0) - 1);
-            int centerY = Convert.ToInt32(Math.Floor(BOARD_DIMENSIONS.Height / 2.0) - 1);
-
-            //Initialize the center with the pawns
-            Move initMove1 = new Move(new Point(centerX, centerY), true);
-            List<Point> points1 = new List<Point>()
-            {
-                new Point(centerX + 1, centerY + 1),
-                new Point(0,0)
-            };
-
-            initMove1.AddChecksToInvert(points1);
-
-            Move initMove2 = new Move(new Point(centerX + 1, centerY), false);
-            List<Point> points2 = new List<Point>()
-            {
-                new Point(centerX, centerY + 1),
-                new Point(1,0),
-                new Point(2,0)
-            };
-
-            initMove2.AddChecksToInvert(points2);
-
-            PlayMove(initMove1);
-            PlayMove(initMove2);
-
+            
         }
 
         public void StartGame()
         {
+            InitBoard();
             whitePlayerTurn = true;
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
 
 
             playersTimer[whitePlayerTurn ? 1 : 0].Start();
             refreshTimer.Start();
+        }
+
+        private void InitBoard()
+        {
+            //We get the center
+            int centerX = Convert.ToInt32(Math.Floor(BOARD_DIMENSIONS.Width / 2.0) - 1);
+            int centerY = Convert.ToInt32(Math.Floor(BOARD_DIMENSIONS.Height / 2.0) - 1);
+
+            //Initialize the center with the pawns
+            List<Move> initMoves = new List<Move>()
+            {
+                //new Move(new Point(0, 0), true),
+                //new Move(new Point(1, 0), true),
+                //new Move(new Point(2, 0), false),
+                new Move(new Point(centerX, centerY), true),
+                new Move(new Point(centerX + 1, centerY + 1), true),
+                new Move(new Point(centerX + 1, centerY), false),
+                new Move(new Point(centerX, centerY + 1), false)
+            };
+
+            foreach (Move m in initMoves)
+            {
+                PlayMove(m);
+            }
         }
 
         /// <summary>
@@ -186,6 +189,7 @@ namespace TP_Othello.GameLogics
                 Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(senderCell.BoardPosition)).FirstOrDefault();
                 if(targetMove != null)
                 {
+                    playedMovesStack.Add(targetMove);
                     PlayMove(targetMove);
                     ChangeTurn();
                 }
@@ -194,13 +198,28 @@ namespace TP_Othello.GameLogics
 
         private void PlayMove(Move move)
         {
+            int score = 0;
             List<Point> cellsPosInvert = move.GetChecksToInvert();
-            cellsPosInvert.Add(move.position);
+            logicalBoard.ApplyMove(move);
+
+            boardView.SetPawnCell(move.position, move.whitePlayer);
+            score++;
 
             foreach(Point point in cellsPosInvert)
             {
                 boardView.SetPawnCell(point, move.whitePlayer);
-                logicalBoard.ApplyMove(move);
+                score++;
+            }
+
+            if(move.whitePlayer)
+            {
+                ScoreWhite += score;
+                ScoreBlack -= score - 1;
+            }
+            else
+            {
+                ScoreBlack += score;
+                ScoreWhite -= score - 1;
             }
         }
 
@@ -251,6 +270,39 @@ namespace TP_Othello.GameLogics
             }
         }
 
+        public void UndoLastMove()
+        {
+            if (playedMovesStack.Count == 0)
+                return;
+
+            int score = 0;
+            Move lastMove = playedMovesStack[playedMovesStack.Count-1];
+            playedMovesStack.RemoveAt(playedMovesStack.Count-1);
+
+            List<Point> cellsPosInvert = logicalBoard.UndoMove(lastMove);
+            boardView.UnsetPawnCell(lastMove.position);
+            score++;
+
+            foreach (Point point in cellsPosInvert)
+            {
+                boardView.SetPawnCell(point, !lastMove.whitePlayer);
+                score++;
+            }
+
+            if (lastMove.whitePlayer)
+            {
+                ScoreWhite -= score;
+                ScoreBlack += score - 1;
+            }
+            else
+            {
+                ScoreBlack -= score;
+                ScoreWhite += score - 1;
+            }
+
+            ChangeTurn();
+        }
+
         /// <summary>
         /// 
         /// https://www.c-sharpcorner.com/UploadFile/020f8f/data-binding-with-inotifypropertychanged-interface/
@@ -258,7 +310,7 @@ namespace TP_Othello.GameLogics
         /// <param name="propertyName"></param>
         protected void NotifyPropertyChanged(string propertyName)
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
 
