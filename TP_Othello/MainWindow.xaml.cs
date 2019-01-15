@@ -48,7 +48,7 @@ namespace TP_Othello
             saveDialog.DefaultExt = "arcgh";
             saveDialog.AddExtension = true;
 
-            if(saveDialog.ShowDialog().HasValue == true)
+            if(saveDialog.ShowDialog() == true)
             {
                 // using code from :
                 // https://www.dotnetperls.com/serialize-list
@@ -80,9 +80,10 @@ namespace TP_Othello
                         BinaryFormatter binaryFormatter = new BinaryFormatter();
                         Game unserializedGame = (Game)binaryFormatter.Deserialize(stream);
 
-                        unserializedGame.BoardView = this.boardView;
+                        unserializedGame.SetBoardView(this.boardView);
 
                         this.game = unserializedGame;
+                        this.DataContext = this.game;
 
                         game.StartGame();
                     }

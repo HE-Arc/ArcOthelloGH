@@ -25,6 +25,9 @@ namespace TP_Othello
 
         public System.Drawing.Point BoardPosition { get => boardPosition; private set => boardPosition = value; }
 
+        private MouseButtonEventHandler CellClickHandler;
+        private MouseEventHandler CellHoverHandler;
+
         /// <summary>
         /// Constructor for the BoardCell object
         /// </summary>
@@ -35,13 +38,11 @@ namespace TP_Othello
         {
             InitializeComponent();
 
-            MouseLeftButtonDown += cellClicked;
-            MouseEnter += cellHover;
-
-            // forging
             MouseLeave += new MouseEventHandler((sender, args) => ResetHighlight());
 
             this.BoardPosition = boardPosition;
+
+            SetHandlers(cellClicked, cellHover);
         }
 
 
@@ -59,6 +60,21 @@ namespace TP_Othello
             this.contentLabel.Background = Brushes.DarkRed;
         }
 
+        public void SetHandlers(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover)
+        {
+            if(CellHoverHandler != null && CellClickHandler != null)
+            {
+                MouseLeftButtonDown -= CellClickHandler;
+                MouseEnter -= CellHoverHandler;
+            }
+
+            this.CellHoverHandler = cellHover;
+            this.CellClickHandler = cellClicked;
+
+            MouseLeftButtonDown += CellClickHandler;
+            MouseEnter += CellHoverHandler;
+        }
+
         public void SetPawnPlayer(bool whitePlayer)
         {
             if(whitePlayer)
@@ -69,6 +85,7 @@ namespace TP_Othello
             {
                 this.imageContainer.Style = this.FindResource("PawnBlack") as Style;
             }
+            this.imageContainer.Visibility = Visibility.Visible;
         }
 
         public void UnsetPawnPlayer()

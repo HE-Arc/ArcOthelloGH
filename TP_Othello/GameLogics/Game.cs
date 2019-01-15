@@ -94,8 +94,7 @@ namespace TP_Othello.GameLogics
             }
         }
 
-        public BoardView BoardView { get { return boardView; } set { boardView = value; RefreshBoardView(); } }
-
+   
         private void RefreshBoardView()
         {
             int[,] boardArray = logicalBoard.BoardArray;
@@ -109,13 +108,21 @@ namespace TP_Othello.GameLogics
                         boardView.SetPawnCell(new Point(i, j), boardArray[i,j] == 1 ? true : false);
                 }
             }
+
+            boardView.SetHandlers(this.CellClickedEventHandler, this.CellHoverEventHandler);
+        }
+
+        public void SetBoardView(BoardView boardView)
+        {
+            this.boardView = boardView;
+            RefreshBoardView();
         }
         #endregion
 
         /// <summary>
         /// This constructor is the base to init different values called when the program is first started and when it loads a saved game
         /// </summary>
-        private Game()
+        public Game()
         {
             this.logicalBoard = new Board(BOARD_DIMENSIONS.Width, BOARD_DIMENSIONS.Height);
             playedMovesStack = new List<Move>();
@@ -147,6 +154,7 @@ namespace TP_Othello.GameLogics
         /// <param name="context">The stream where the data come from</param>
         private Game(SerializationInfo info, StreamingContext context) : this()
         {
+            // Add the saved play time of each player 
             TimeSpan timeSpanWhite = new TimeSpan().Add((TimeSpan)info.GetValue("WhiteTime", typeof(TimeSpan)));
             Stopwatch whiteStopwatch = GetPlayerStopwatch(true);
             whiteStopwatch.Reset();
