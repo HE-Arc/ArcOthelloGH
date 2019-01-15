@@ -44,8 +44,6 @@ namespace TP_Othello
             boardCells = new BoardCell[boardDimensions.Width, boardDimensions.Height];
 
             // creating cells row by row but it doesn't really change anything
-
-
             for(int i = 0; i < boardDimensions.Height; i++)
             {
                 RowDefinition rowDefinition = new RowDefinition();
@@ -75,6 +73,17 @@ namespace TP_Othello
 
                     GridBoard.Children.Add(boardCell);
                     boardCells[i, j] = boardCell;
+                }
+            }
+        }
+
+        public void SetHandlers(MouseButtonEventHandler cellClickHandler, MouseEventHandler cellHoverHandler)
+        {
+            for(int i = 0; i < boardCells.GetLength(0); i++)
+            {
+                for(int j = 0; j < boardCells.GetLength(1); j++)
+                {
+                    boardCells[i, j].SetHandlers(cellClickHandler, cellHoverHandler);
                 }
             }
         }

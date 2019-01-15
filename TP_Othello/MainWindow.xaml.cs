@@ -25,13 +25,13 @@ namespace TP_Othello
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Game game;
+        private GameWithBoardInItsName game;
 
         public MainWindow()
         {
             InitializeComponent();
             
-            this.game = new Game(boardView);
+            this.game = new GameWithBoardInItsName(boardView);
             this.DataContext = game;
             game.StartGame();
         }
@@ -44,8 +44,11 @@ namespace TP_Othello
         private void btnSaveGame_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
-            saveDialog.Filter = "Arc Othello files (*.arcgh)|All files (*.*)";
-            if(saveDialog.ShowDialog().HasValue == true)
+            saveDialog.Filter = "Arc Othello files (*.arcgh)|*.arcgh|All files (*.*)|*.*";
+            saveDialog.DefaultExt = "arcgh";
+            saveDialog.AddExtension = true;
+
+            if(saveDialog.ShowDialog() == true)
             {
                 // using code from :
                 // https://www.dotnetperls.com/serialize-list
@@ -53,8 +56,8 @@ namespace TP_Othello
                 {
                     using (Stream stream = File.Open(saveDialog.FileName, FileMode.Create))
                     {
-                        BinaryFormatter bin = new BinaryFormatter();
-                        bin.Serialize(stream, game);
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        binaryFormatter.Serialize(stream, game);
                     }
                 }
                 catch(IOException exception)
@@ -66,6 +69,30 @@ namespace TP_Othello
 
         private void btnLoadGame_Click(object sender, RoutedEventArgs e)
         {
+            OpenFileDialog openDialog = new OpenFileDialog();
+            openDialog.Filter = "Arc Othello files (*.arcgh)|*.arcgh|All files (*.*)|*.*";
+            if (openDialog.ShowDialog().HasValue)
+            {
+                try
+                {
+                    using (Stream stream = File.Open(openDialog.FileName, FileMode.Open))
+                    {
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        GameWithBoardInItsName unserializedGame = (GameWithBoardInItsName)binaryFormatter.Deserialize(stream);
+
+                        unserializedGame.SetBoardView(this.boardView);
+
+                        this.game = unserializedGame;
+                        this.DataContext = this.game;
+
+                        game.StartGame();
+                    }
+                }
+                catch (IOException exception)
+                {
+                    MessageBox.Show($"Unable to load the game : {exception.Message}", "Load file error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
             Debug.Write("Load game");
         }
 
