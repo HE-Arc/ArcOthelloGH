@@ -45,13 +45,16 @@ namespace TP_Othello
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Filter = "Arc Othello files (*.arcgh)|*.arcgh|All files (*.*)|*.*";
+            saveDialog.DefaultExt = "arcgh";
+            saveDialog.AddExtension = true;
+
             if(saveDialog.ShowDialog().HasValue == true)
             {
                 // using code from :
                 // https://www.dotnetperls.com/serialize-list
                 try
                 {
-                    using (Stream stream = File.Open(saveDialog.FileName + ".arcgh", FileMode.Create))
+                    using (Stream stream = File.Open(saveDialog.FileName, FileMode.Create))
                     {
                         BinaryFormatter binaryFormatter = new BinaryFormatter();
                         binaryFormatter.Serialize(stream, game);
@@ -75,9 +78,13 @@ namespace TP_Othello
                     using (Stream stream = File.Open(openDialog.FileName, FileMode.Open))
                     {
                         BinaryFormatter binaryFormatter = new BinaryFormatter();
-                        Game unserializeGame = (Game)binaryFormatter.Deserialize(stream);
+                        Game unserializedGame = (Game)binaryFormatter.Deserialize(stream);
 
-                        game.GetBoard();
+                        unserializedGame.BoardView = this.boardView;
+
+                        this.game = unserializedGame;
+
+                        game.StartGame();
                     }
                 }
                 catch (IOException exception)

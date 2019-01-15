@@ -17,7 +17,7 @@ namespace TP_Othello.GameLogics
     /// <summary>
     /// This class is the main engine for the Othello game. It synchronizes the board display and the logic behind.
     /// <see cref="Board"/>
-    /// <see cref="BoardView"/>
+    /// <see cref="TP_Othello.BoardView"/>
     /// </summary>
     class Game : IPlayable.IPlayable, INotifyPropertyChanged, ISerializable
     {
@@ -93,18 +93,31 @@ namespace TP_Othello.GameLogics
                 NotifyPropertyChanged("ScoreBlack");
             }
         }
+
+        public BoardView BoardView { get { return boardView; } set { boardView = value; RefreshBoardView(); } }
+
+        private void RefreshBoardView()
+        {
+            int[,] boardArray = logicalBoard.BoardArray;
+            for(int i = 0; i < boardArray.GetLength(0); i++)
+            {
+                for(int j = 0; j < boardArray.GetLength(1); j++)
+                {
+                    if (boardArray[i, j] == -1)
+                        boardView.UnsetPawnCell(new Point(i, j));
+                    else
+                        boardView.SetPawnCell(new Point(i, j), boardArray[i,j] == 1 ? true : false);
+                }
+            }
+        }
         #endregion
 
-        public Game(BoardView boardView)
+        /// <summary>
+        /// This constructor is the base to init different values called when the program is first started and when it loads a saved game
+        /// </summary>
+        private Game()
         {
-            CellClickedEvent = new MouseButtonEventHandler(CellClickedEventHandler);
-            CellHoverEvent = new MouseEventHandler(CellHoverEventHandler);
-
-            this.boardView = boardView;
             this.logicalBoard = new Board(BOARD_DIMENSIONS.Width, BOARD_DIMENSIONS.Height);
-
-            boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
-
             playedMovesStack = new List<Move>();
 
             refreshTimer = new Timer(1000);
@@ -114,19 +127,26 @@ namespace TP_Othello.GameLogics
             playersTimer = new Stopwatch[2];
             playersTimer[0] = new Stopwatch();
             playersTimer[1] = new Stopwatch();
-
-            
         }
 
-        private Game(SerializationInfo info, StreamingContext context)
+        public Game(BoardView boardView) : this()
         {
-            info.AddValue("Turn", whitePlayerTurn);
-            info.AddValue("WhiteTime", GetPlayerStopwatch(true).Elapsed);
-            info.AddValue("BlackTime", GetPlayerStopwatch(false).Elapsed);
-            info.AddValue("Board", this.logicalBoard, typeof(Board));
+            CellClickedEvent = new MouseButtonEventHandler(CellClickedEventHandler);
+            CellHoverEvent = new MouseEventHandler(CellHoverEventHandler);
 
-            this.logicalBoard = (Board)info.GetValue("Board", typeof(Board));
+            this.boardView = boardView;
 
+            boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
+            InitBoard();
+        }
+
+        /// <summary>
+        /// This constructor is called when the board is unserialized
+        /// </summary>
+        /// <param name="info">The list of parameters containing the serialized values</param>
+        /// <param name="context">The stream where the data come from</param>
+        private Game(SerializationInfo info, StreamingContext context) : this()
+        {
             TimeSpan timeSpanWhite = new TimeSpan().Add((TimeSpan)info.GetValue("WhiteTime", typeof(TimeSpan)));
             Stopwatch whiteStopwatch = GetPlayerStopwatch(true);
             whiteStopwatch.Reset();
@@ -138,14 +158,12 @@ namespace TP_Othello.GameLogics
             blackStopwatch.Elapsed.Add(timeSpanBlack);
 
             whitePlayerTurn = info.GetBoolean("Turn");
+            this.logicalBoard = (Board)info.GetValue("Board", typeof(Board));
         }
 
         public void StartGame()
         {
-            InitBoard();
-            whitePlayerTurn = true;
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
-
 
             GetPlayerStopwatch(whitePlayerTurn).Start();
             refreshTimer.Start();

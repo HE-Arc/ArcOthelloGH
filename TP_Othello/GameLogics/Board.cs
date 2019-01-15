@@ -15,6 +15,8 @@ namespace TP_Othello.GameLogics
         private int[,] board;
         private Size boardSize;
 
+        public int[,] BoardArray { get => board; private set => board = value; }
+
         public Board(int width, int height)
         {
             board = new int[width, height];
@@ -25,25 +27,27 @@ namespace TP_Othello.GameLogics
         
         private Board(SerializationInfo info, StreamingContext context)
         {
-            Object boardObject = info.GetValue("Board", typeof(Board));
+            Object boardObject = info.GetValue("BoardArray", typeof(Array));
 
             int[,] board = null;
 
             if (boardObject is Array boardArray)
             {
-                int columnCount = boardArray.GetUpperBound(0);
-                int rowCount = boardArray.GetLength(0);
+                int width = boardArray.GetLength(0);
+                int height = boardArray.GetLength(1);
+                boardSize = new Size(width, height);
 
-                board = new int[rowCount, columnCount];
+                board = new int[width, height];
 
-                for (int i = 0; i < rowCount; i++)
+                for (int i = 0; i < width; i++)
                 {
-                    for (int j = 0; j < columnCount; j++)
+                    for (int j = 0; j < height; j++)
                     {
                         board[i, j] = Convert.ToInt32(boardArray.GetValue(i, j));
                     }
                 }
             }
+            
             this.board = board;
         }
 
@@ -154,7 +158,6 @@ namespace TP_Othello.GameLogics
         {
             //The result list that will contain all the moves we found
             List<Move> moves = new List<Move>();
-
             int playerCheck = playerId ? 1 : 0;
             int opponentCheck = playerId ? 0 : 1;
 
@@ -260,7 +263,7 @@ namespace TP_Othello.GameLogics
 
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("Board", this.board);
+            info.AddValue("BoardArray", this.board);
         }
     }
 }
