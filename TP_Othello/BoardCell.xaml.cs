@@ -39,8 +39,6 @@ namespace TP_Othello
         {
             InitializeComponent();
 
-            MouseLeave += new MouseEventHandler((sender, args) => ResetHint());
-
             this.BoardPosition = boardPosition;
 
             SetHandlers(cellClicked, cellHover);
@@ -53,18 +51,12 @@ namespace TP_Othello
         /// </summary>
         public void ResetHint()
         {
-            
             this.contentLabel.Style = FindResource("CellBaseState") as Style;
         }
 
         public void SetMoveHint()
         {
             this.contentLabel.Style = FindResource("CellHint") as Style;
-        }
-
-        public void Highlight(bool whitePlayer)
-        {
-            this.contentLabel.Background = Brushes.DarkRed;
         }
 
         public void SetHandlers(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover)
@@ -84,8 +76,8 @@ namespace TP_Othello
 
         public void SetPawnPlayer(bool whitePlayer)
         {
-            //contentLabel.Style = FindResource("style1") as Style;
-            
+
+            this.contentLabel.Style = this.FindResource("CellBaseState") as Style;
             if(whitePlayer)
             {
                 this.imageContainer.Style = this.FindResource("PawnWhite") as Style;
@@ -94,12 +86,12 @@ namespace TP_Othello
             {
                 this.imageContainer.Style = this.FindResource("PawnBlack") as Style;
             }
-            this.imageContainer.Visibility = Visibility.Visible;
         }
 
         public void UnsetPawnPlayer()
         {
-            imageContainer.Visibility = Visibility.Hidden;
+            this.imageContainer.Style = this.FindResource("PawnBaseState") as Style;
+            this.contentLabel.Style = FindResource("CellBaseState") as Style;
         }
     }
 }

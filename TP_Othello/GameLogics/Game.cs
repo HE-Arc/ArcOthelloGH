@@ -24,7 +24,7 @@ namespace TP_Othello.GameLogics
         BoardView boardView;
         Board logicalBoard;
 
-        private Size BOARD_DIMENSIONS = new System.Drawing.Size(10, 10);
+        private Size BOARD_DIMENSIONS = new System.Drawing.Size(9, 7);
 
         // Those are the event handlers passed to the cells so the event fired for them is handled here
         private event MouseButtonEventHandler CellClickedEvent;
@@ -200,6 +200,10 @@ namespace TP_Othello.GameLogics
         public void StartGame()
         {
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
+            foreach (Move m in currentPossibleMoves)
+            {
+                boardView.SetMoveHint(m.position);
+            }
 
             GetPlayerStopwatch(whitePlayerTurn).Start();
             refreshTimer.Start();
@@ -390,6 +394,11 @@ namespace TP_Othello.GameLogics
         {
             if (playedMovesStack.Count == 0)
                 return;
+
+            foreach(Move move in currentPossibleMoves)
+            {
+                boardView.ResetHint(move.position);
+            }
 
             int score = 0;
             Move lastMove = playedMovesStack[playedMovesStack.Count-1];
