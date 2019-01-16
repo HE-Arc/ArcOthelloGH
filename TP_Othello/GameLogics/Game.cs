@@ -17,9 +17,9 @@ namespace TP_Othello.GameLogics
     /// <summary>
     /// This class is the main engine for the Othello game. It synchronizes the board display and the logic behind.
     /// <see cref="Board"/>
-    /// <see cref="BoardView"/>
+    /// <see cref="TP_Othello.BoardView"/>
     /// </summary>
-    class Game : IPlayable.IPlayable, INotifyPropertyChanged, ISerializable
+    class GameWithBoardInItsName : IPlayable.IPlayable, INotifyPropertyChanged, ISerializable
     {
         BoardView boardView;
         Board logicalBoard;
@@ -34,8 +34,6 @@ namespace TP_Othello.GameLogics
         private Stopwatch[] playersTimer;
         private Timer refreshTimer;
 
-        
-
         private List<Move> playedMovesStack;
 
 
@@ -48,6 +46,9 @@ namespace TP_Othello.GameLogics
 
         private int scoreWhite = 0, scoreBlack = 0;
 
+        /// <summary>
+        /// This is a helper to return the white player's play time. Bound to the UI
+        /// </summary>
         public string TimeWhite
         {
             get { return timeWhite; }
@@ -57,6 +58,10 @@ namespace TP_Othello.GameLogics
             }
 
         }
+
+        /// <summary>
+        /// This is a helper to return the black player's play time. Bound to the UI
+        /// </summary>
         public string TimeBlack
         {
             get { return timeBlack; }
@@ -66,16 +71,9 @@ namespace TP_Othello.GameLogics
             }
         }
 
-        /*public string P1Score
-        {
-            get { return ScoreWhite.ToString(); }
-        }
-
-        public string P2Score
-        {
-            get { return ScoreBlack.ToString(); }
-        }*/
-
+        /// <summary>
+        /// This is the white player's score bound to the UI
+        /// </summary>
         public int ScoreWhite
         {
             get { return scoreWhite; }
@@ -85,6 +83,9 @@ namespace TP_Othello.GameLogics
             }
         }
 
+        /// <summary>
+        /// This is the black player's score bound to the UI
+        /// </summary>
         public int ScoreBlack
         {
             get { return scoreBlack; }
@@ -93,18 +94,48 @@ namespace TP_Othello.GameLogics
                 NotifyPropertyChanged("ScoreBlack");
             }
         }
+
+   
+        /// <summary>
+        /// This method is called to refresh the board's UI and propagate the new Event handlers
+        /// Called when board is unserialized and we need to reflect its state on the UI
+        /// </summary>
+        private void RefreshBoardView()
+        {
+            int[,] boardArray = logicalBoard.BoardArray;
+            for(int i = 0; i < boardArray.GetLength(0); i++)
+            {
+                for(int j = 0; j < boardArray.GetLength(1); j++)
+                {
+                    if (boardArray[i, j] == -1)
+                        boardView.UnsetPawnCell(new Point(i, j));
+                    else
+                        boardView.SetPawnCell(new Point(i, j), boardArray[i,j] == 1 ? true : false);
+                }
+            }
+
+            boardView.SetHandlers(this.CellClickedEventHandler, this.CellHoverEventHandler);
+        }
+
+        /// <summary>
+        /// This method is called when a game is loaded to set the game's board and update some informations on it.
+        /// Will call <see cref="RefreshBoardView"/>
+        /// </summary>
+        /// <param name="boardView"></param>
+        public void SetBoardView(BoardView boardView)
+        {
+            this.boardView = boardView;
+            RefreshBoardView();
+        }
         #endregion
 
-        public Game(BoardView boardView)
+        /// <summary>
+        /// This constructor is the base to init different values called when the program is first started and when it loads a saved game
+        /// It should be private since it's only used as a helper but the tournament needs a default constructor
+        /// </summary>
+        public GameWithBoardInItsName()
         {
-            CellClickedEvent = new MouseButtonEventHandler(CellClickedEventHandler);
-            CellHoverEvent = new MouseEventHandler(CellHoverEventHandler);
-
-            this.boardView = boardView;
             this.logicalBoard = new Board(BOARD_DIMENSIONS.Width, BOARD_DIMENSIONS.Height);
-
-            boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
-
             playedMovesStack = new List<Move>();
 
             refreshTimer = new Timer(1000);
@@ -114,21 +145,69 @@ namespace TP_Othello.GameLogics
             playersTimer = new Stopwatch[2];
             playersTimer[0] = new Stopwatch();
             playersTimer[1] = new Stopwatch();
-
-            
         }
 
+        /// <summary>
+        /// This is the constructor that should be used in most cases when not using the AI for the tournament
+        /// </summary>
+        /// <param name="boardView">The BoardView object that the object will update as the game is played</param>
+        public GameWithBoardInItsName(BoardView boardView) : this()
+        {
+            CellClickedEvent = new MouseButtonEventHandler(CellClickedEventHandler);
+            CellHoverEvent = new MouseEventHandler(CellHoverEventHandler);
+
+            this.boardView = boardView;
+
+            boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
+            InitBoard();
+
+            Random random = new Random();
+
+            // starts with a random player
+            whitePlayerTurn = random.Next(0, 2) == 1;
+        }
+
+        /// <summary>
+        /// This constructor is called when the board is unserialized
+        /// </summary>
+        /// <param name="info">The list of parameters containing the serialized values</param>
+        /// <param name="context">The stream where the data come from</param>
+        private GameWithBoardInItsName(SerializationInfo info, StreamingContext context) : this()
+        {
+            // Add the saved play time of each player 
+            TimeSpan timeSpanWhite = new TimeSpan().Add((TimeSpan)info.GetValue("WhiteTime", typeof(TimeSpan)));
+            Stopwatch whiteStopwatch = GetPlayerStopwatch(true);
+            whiteStopwatch.Reset();
+            whiteStopwatch.Elapsed.Add(timeSpanWhite);
+
+            TimeSpan timeSpanBlack = new TimeSpan().Add((TimeSpan)info.GetValue("BlackTime", typeof(TimeSpan)));
+            Stopwatch blackStopwatch = GetPlayerStopwatch(false);
+            blackStopwatch.Reset();
+            blackStopwatch.Elapsed.Add(timeSpanBlack);
+
+            whitePlayerTurn = info.GetBoolean("Turn");
+            this.logicalBoard = (Board)info.GetValue("Board", typeof(Board));
+
+
+            ScoreWhite = info.GetInt32("ScoreWhite");
+            ScoreBlack = info.GetInt32("ScoreBlack");
+        }
+
+        /// <summary>
+        /// This method inits some data for the first game turn.
+        /// It looks for the possible moves and starts the timer.
+        /// </summary>
         public void StartGame()
         {
-            InitBoard();
-            whitePlayerTurn = true;
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
-
 
             GetPlayerStopwatch(whitePlayerTurn).Start();
             refreshTimer.Start();
         }
 
+        /// <summary>
+        /// This method sets the center pawns 
+        /// </summary>
         private void InitBoard()
         {
             //We get the center
@@ -138,9 +217,6 @@ namespace TP_Othello.GameLogics
             //Initialize the center with the pawns
             List<Move> initMoves = new List<Move>()
             {
-                //new Move(new Point(0, 0), true),
-                //new Move(new Point(1, 0), true),
-                //new Move(new Point(2, 0), false),
                 new Move(new Point(centerX, centerY), true),
                 new Move(new Point(centerX + 1, centerY + 1), true),
                 new Move(new Point(centerX + 1, centerY), false),
@@ -154,7 +230,7 @@ namespace TP_Othello.GameLogics
         }
 
         /// <summary>
-        /// This function changes the variables to change turn
+        /// This function changes the variables to change turn, calculates the possible moves for the current player and checks for game over.
         /// </summary>
         private void ChangeTurn()
         {
@@ -190,6 +266,11 @@ namespace TP_Othello.GameLogics
             }
         }
 
+        /// <summary>
+        /// Helper fuction to return the player's stopwatch
+        /// </summary>
+        /// <param name="whitePlayer">the player's stopwatch to get</param>
+        /// <returns></returns>
         private Stopwatch GetPlayerStopwatch(bool whitePlayer)
         {
             return playersTimer[whitePlayer ? 0 : 1];
@@ -224,6 +305,11 @@ namespace TP_Othello.GameLogics
             }
         }
 
+        /// <summary>
+        /// This method applies a move on the logical part of the board and applies its consequences to the UI
+        /// </summary>
+        /// <see cref="Move"/>
+        /// <param name="move">The move object containing the position played at and the pawns to modify</param>
         private void PlayMove(Move move)
         {
             int score = 0;
@@ -280,11 +366,10 @@ namespace TP_Othello.GameLogics
         /// <summary>
         /// This function is raised by the players timer
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">Event sender object</param>
+        /// <param name="e">Args</param>
         private void OnTimerEvent(object sender, ElapsedEventArgs e)
         {
-            // TODO - Link text with timer
             if (sender is Timer timer)
             {
                 if (whitePlayerTurn)
@@ -298,6 +383,9 @@ namespace TP_Othello.GameLogics
             }
         }
 
+        /// <summary>
+        /// This method checks the moves stack and returns to the previous state of the board. Basically the reverse version of <seealso cref="PlayMove(Move)"/>
+        /// </summary>
         public void UndoLastMove()
         {
             if (playedMovesStack.Count == 0)
@@ -332,10 +420,10 @@ namespace TP_Othello.GameLogics
         }
 
         /// <summary>
-        /// 
+        /// This method fires an event to update the data bound on the UI
         /// https://www.c-sharpcorner.com/UploadFile/020f8f/data-binding-with-inotifypropertychanged-interface/
         /// </summary>
-        /// <param name="propertyName"></param>
+        /// <param name="propertyName">The property's name to update on the UI</param>
         protected void NotifyPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -350,11 +438,16 @@ namespace TP_Othello.GameLogics
 
         public bool IsPlayable(int column, int line, bool isWhite)
         {
-            throw new NotImplementedException();
+            Point movePos = new Point(column, line);
+
+            return currentPossibleMoves.Any(move => move.position.Equals(movePos));
         }
 
         public bool PlayMove(int column, int line, bool isWhite)
         {
+            Point movePos = new Point(column, line);
+
+
             throw new NotImplementedException();
         }
 
@@ -365,25 +458,34 @@ namespace TP_Othello.GameLogics
 
         public int[,] GetBoard()
         {
-            throw new NotImplementedException();
+            return logicalBoard.BoardArray;
         }
 
         public int GetWhiteScore()
         {
-            throw new NotImplementedException();
+            return ScoreWhite;
         }
 
         public int GetBlackScore()
         {
-            throw new NotImplementedException();
+            return ScoreBlack;
         }
         #endregion
 
+        /// <summary>
+        /// This method is called by the Serialization process to populate the values to store.
+        /// </summary>
+        /// <param name="info">Serialized informations storage object</param>
+        /// <param name="context">The stream context used by the serialization process</param>
+        /// Will also call <seealso cref="Board.GetObjectData(SerializationInfo, StreamingContext)"/>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Turn", whitePlayerTurn);
-            info.AddValue("WhiteTime", GetPlayerStopwatch(true));
-            info.AddValue("BlackTime", GetPlayerStopwatch(false));
+            info.AddValue("WhiteTime", GetPlayerStopwatch(true).Elapsed);
+            info.AddValue("BlackTime", GetPlayerStopwatch(false).Elapsed);
+            info.AddValue("Board", this.logicalBoard, typeof(Board));
+            info.AddValue("ScoreWhite", this.ScoreWhite);
+            info.AddValue("ScoreBlack", this.ScoreBlack);
         }
 
     }
