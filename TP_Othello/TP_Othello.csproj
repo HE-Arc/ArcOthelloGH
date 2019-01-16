@@ -139,5 +139,11 @@
   <ItemGroup>
     <Resource Include="Resources\undo.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\black_pawn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\pawn_white.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -52,7 +52,7 @@
         </StackPanel>
 
 
-        <local:BoardView x:Name="boardView">
+        <local:BoardView x:Name="boardView" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Mode=Self}}">
 
         </local:BoardView>
 

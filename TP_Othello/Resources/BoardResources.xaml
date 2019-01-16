@@ -16,17 +16,18 @@
         <Setter Property="Visibility" Value="Visible"/>
     </Style>
     <Style x:Key="PawnWhite" TargetType="Image" BasedOn="{StaticResource PawnPlayed}">
-        <Setter Property="Source" Value="pawn_basic_white.png"/>
+        <Setter Property="Source" Value="pawn_white.png"/>
     </Style>
     <Style x:Key="PawnBlack" TargetType="Image" BasedOn="{StaticResource PawnPlayed}">
-        <Setter Property="Source" Value="pawn_basic_black.png"/>
+        <!--<Setter Property="Source" Value="pawn_basic_black.png"/>-->
+        <Setter Property="Source" Value="black_pawn.png"/>
     </Style>
 
     <Style x:Key="CellBaseState" TargetType="Label">
         <Setter Property="Opacity" Value="1.0"/>
         <Setter Property="Background"  Value="Transparent"/>
 
-        <Style.Triggers>
+        <!--<Style.Triggers>
             <EventTrigger RoutedEvent="Label.MouseUp">
                 <EventTrigger.Actions>
                     <BeginStoryboard>
@@ -38,7 +39,7 @@
                     </BeginStoryboard>
                 </EventTrigger.Actions>
             </EventTrigger>
-        </Style.Triggers>
+        </Style.Triggers>-->
     </Style>
 
     <Style x:Key="CellHint" TargetType="Label">
@@ -73,18 +74,20 @@
                 </EventTrigger.Actions>
             </EventTrigger>
 
-            <!--<EventTrigger RoutedEvent="Label.Click">
+
+            <EventTrigger RoutedEvent="Label.MouseDown">
                 <EventTrigger.Actions>
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation
-                                Storyboard.TargetProperty="(Label.Opacity)"
-                                To="0.6" Duration="0:0:0.2" />
+                            Storyboard.TargetProperty="(Label.Opacity)"
+                            To="1.0" Duration="0:0:0" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger.Actions>
-            </EventTrigger>-->
-            
+            </EventTrigger>
+      
+
         </Style.Triggers>
     </Style>
 </ResourceDictionary>

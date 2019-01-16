@@ -57,6 +57,7 @@ namespace TP_Othello.GameLogics
             {
                 for (int x = 0; x < boardSize.Width; x++)
                 {
+                    //if(horizontalLines[y].Any(boardVal => boardVal.Equals(playerId ? 1 : 0)))
                     horizontalLines[y].Add(new Point(x, y));
                     verticalLines[x].Add(new Point(x, y));
                     leftDownDiagonalLines[x + y].Add(new Point(x, y));
