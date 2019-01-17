@@ -6,7 +6,20 @@
         xmlns:local="clr-namespace:TP_Othello"
         xmlns:customControl="clr-"
         mc:Ignorable="d"
-        Title="ArcOthello Grava Herbelin"  Width="800" Height="600">
+        Title="ArcOthello Grava Herbelin" Width="800" Height="600" MinHeight="600" MinWidth="800">
+    <Window.Resources>
+        <Style x:Key="PlayerInfos" TargetType="TextBlock">
+            <Setter Property="Margin" Value="5,0,5,0"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="PlayerInfosLayout" TargetType="StackPanel">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Width" Value="Auto"/>
+            <Setter Property="Margin" Value="15,0,15,0" />
+        </Style>
+    </Window.Resources>
     <DockPanel HorizontalAlignment="Stretch">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
@@ -42,23 +55,23 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <StackPanel DockPanel.Dock="Left" Margin="0,0.2,0,-0.4" VerticalAlignment ="Center" HorizontalAlignment="Center">
-            <TextBlock Margin="5,0,5,0">
+        <StackPanel DockPanel.Dock="Left" Style="{StaticResource PlayerInfosLayout}">
+            <TextBlock Style="{StaticResource PlayerInfos}">
                 Player 1
             </TextBlock>
-            <TextBlock x:Uid="timerP1"  Margin="5,0,5,0" Text="{Binding TimeWhite, Mode= OneWay}" />
-            <TextBlock x:Uid="scoreP1"  Margin="5,0,5,0" Text="{Binding ScoreWhite, Mode=OneWay}" />
+            <TextBlock x:Uid="timerP1"  Style="{StaticResource PlayerInfos}" Text="{Binding TimeWhite, Mode= OneWay}" />
+            <TextBlock x:Uid="scoreP1"  Style="{StaticResource PlayerInfos}" Text="{Binding ScoreWhite, Mode=OneWay}" />
         </StackPanel>
-        <StackPanel DockPanel.Dock="Right" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock Margin="5,0,5,0">
+        <StackPanel DockPanel.Dock="Right" Style="{StaticResource PlayerInfosLayout}">
+            <TextBlock Style="{StaticResource PlayerInfos}">
                 Player 2
             </TextBlock>
-            <TextBlock x:Uid="timerP2"  Margin="5,0,5,0" Text="{Binding TimeBlack, Mode= OneWay}" />
-            <TextBlock x:Uid="scoreP2"  Margin="5,0,5,0" Text="{Binding ScoreBlack, Mode= OneWay}" />
+            <TextBlock x:Uid="timerP2"  Style="{StaticResource PlayerInfos}" Text="{Binding TimeBlack, Mode= OneWay}" />
+            <TextBlock x:Uid="scoreP2"  Style="{StaticResource PlayerInfos}" Text="{Binding ScoreBlack, Mode= OneWay}" />
         </StackPanel>
 
 
-        <local:BoardView x:Name="boardView">
+        <local:BoardView x:Name="boardView" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Mode=Self}}">
 
         </local:BoardView>
 

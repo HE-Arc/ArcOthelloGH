@@ -5,7 +5,7 @@
     Style for the base state. Image has a value but is hidden because we can't init (I think) with a null image
     -->
     <Style x:Key="PawnBaseState" TargetType="Image">
-        <Setter Property="Source" Value="pawn_basic_white.png"/>
+        <Setter Property="Source" Value="white_pawn.png"/>
         <Setter Property="Visibility" Value="Hidden"/>
     </Style>
     
@@ -14,31 +14,20 @@
     -->
     <Style x:Key="PawnPlayed" TargetType="Image">
         <Setter Property="Visibility" Value="Visible"/>
+        <Setter Property="Opacity" Value="1.0"/>
     </Style>
     <Style x:Key="PawnWhite" TargetType="Image" BasedOn="{StaticResource PawnPlayed}">
-        <Setter Property="Source" Value="pawn_basic_white.png"/>
+        <Setter Property="Source" Value="white_pawn.png"/>
     </Style>
     <Style x:Key="PawnBlack" TargetType="Image" BasedOn="{StaticResource PawnPlayed}">
-        <Setter Property="Source" Value="pawn_basic_black.png"/>
+        <!--<Setter Property="Source" Value="pawn_basic_black.png"/>-->
+        
+        <Setter Property="Source" Value="black_pawn.png"/>
     </Style>
 
     <Style x:Key="CellBaseState" TargetType="Label">
+        <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Opacity" Value="1.0"/>
-        <Setter Property="Background"  Value="Transparent"/>
-
-        <Style.Triggers>
-            <EventTrigger RoutedEvent="Label.MouseUp">
-                <EventTrigger.Actions>
-                    <BeginStoryboard>
-                        <Storyboard>
-                            <DoubleAnimation
-                                Storyboard.TargetProperty="(Label.Opacity)"
-                                To="1.0" Duration="0:0:0.1" />
-                        </Storyboard>
-                    </BeginStoryboard>
-                </EventTrigger.Actions>
-            </EventTrigger>
-        </Style.Triggers>
     </Style>
 
     <Style x:Key="CellHint" TargetType="Label">
@@ -73,18 +62,20 @@
                 </EventTrigger.Actions>
             </EventTrigger>
 
-            <!--<EventTrigger RoutedEvent="Label.Click">
+
+            <EventTrigger RoutedEvent="Label.MouseDown">
                 <EventTrigger.Actions>
                     <BeginStoryboard>
                         <Storyboard>
                             <DoubleAnimation
-                                Storyboard.TargetProperty="(Label.Opacity)"
-                                To="0.6" Duration="0:0:0.2" />
+                            Storyboard.TargetProperty="(Label.Opacity)"
+                            To="1.0" Duration="0:0:0" />
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger.Actions>
-            </EventTrigger>-->
-            
+            </EventTrigger>
+      
+
         </Style.Triggers>
     </Style>
 </ResourceDictionary>

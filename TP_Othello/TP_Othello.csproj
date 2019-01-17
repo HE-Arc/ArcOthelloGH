@@ -123,10 +123,6 @@
     <Resource Include="libs\IPlayable.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\pawn_basic_black.png" />
-    <Resource Include="Resources\pawn_basic_white.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\open.ico" />
     <Resource Include="Resources\save.ico" />
   </ItemGroup>
@@ -141,6 +137,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\new.png" />
+    <Resource Include="Resources\black_pawn.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\white_pawn.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

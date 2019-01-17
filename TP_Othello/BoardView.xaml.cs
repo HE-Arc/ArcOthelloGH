@@ -88,7 +88,6 @@ namespace TP_Othello
             }
         }
 
-        // TODO : have player ID refactored in some manner
         public void SetPawnCell(System.Drawing.Point position, bool whitePlayer)
         {
             boardCells[position.X, position.Y].SetPawnPlayer(whitePlayer);
@@ -111,7 +110,7 @@ namespace TP_Othello
             boardCells[position.X, position.Y].SetMoveHint();
         }
 
-        internal void ResetHint(System.Drawing.Point position)
+        public void ResetHint(System.Drawing.Point position)
         {
             boardCells[position.X, position.Y].ResetHint();
         }

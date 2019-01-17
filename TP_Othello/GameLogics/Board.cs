@@ -86,6 +86,7 @@ namespace TP_Othello.GameLogics
             {
                 for (int x = 0; x < boardSize.Width; x++)
                 {
+                    //if(horizontalLines[y].Any(boardVal => boardVal.Equals(playerId ? 1 : 0)))
                     horizontalLines[y].Add(new Point(x, y));
                     verticalLines[x].Add(new Point(x, y));
                     leftDownDiagonalLines[x + y].Add(new Point(x, y));
@@ -96,6 +97,13 @@ namespace TP_Othello.GameLogics
                     rightDownDiagonalLines[boardSize.Width-1-x + y].Add(new Point(x, y));
                 }
             }
+
+            // remove the first and last 2 since they are the diagonals with 1 and 2 elements only
+            leftDownDiagonalLines.RemoveRange(0, 2);
+            rightDownDiagonalLines.RemoveRange(0, 2);
+            leftDownDiagonalLines.RemoveRange(leftDownDiagonalLines.Count - 2, 2);
+            rightDownDiagonalLines.RemoveRange(rightDownDiagonalLines.Count - 2, 2);
+
 
             List<List<Point>> mergedLists = new List<List<Point>>();
 

@@ -6,24 +6,18 @@
              xmlns:local="clr-namespace:TP_Othello"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300" 
-             Foreground="White"> 
+             > 
              
     <UserControl.Background>
         <ImageBrush ImageSource="/Resources/carpet.jpg" Stretch="UniformToFill"/>
     </UserControl.Background>
 
-    <Border BorderThickness="2" BorderBrush="Black">
-        <!--<Border.Resources>
-            <Style TargetType="Border" x:Key="Cell_Hovered">
-                
-            </Style>
-            <Style TargetType="Border" x:Key="Cell_Regular">
-
-            </Style>
-        </Border.Resources>-->
-        <Label x:Name="contentLabel" Style="{StaticResource CellBaseState}">
-            <Image x:Name="imageContainer" Style="{StaticResource PawnBaseState}">
-            </Image>
-        </Label>
+    <Border BorderThickness="2, 2, 1, 1" BorderBrush="DarkGreen">
+        <Border BorderThickness="0, 0, 1, 1" BorderBrush="MediumSeaGreen" >
+            <Label x:Name="contentLabel" Style="{StaticResource CellBaseState}">
+                <Image x:Name="imageContainer" Style="{StaticResource PawnBaseState}">
+                </Image>
+            </Label>
+        </Border>
     </Border>
 </UserControl>
