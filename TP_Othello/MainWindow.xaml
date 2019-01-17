@@ -10,6 +10,12 @@
     <DockPanel HorizontalAlignment="Stretch">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
+                <Button x:Name="btnNewGame" ToolTip="Reset the game" Margin="3" Click="btnNewGame_Click" IsEnabled="True">
+                    <StackPanel>
+                        <Image Source="./Resources/new.png" Height="16"></Image>
+                        <TextBlock Foreground="Black">New</TextBlock>
+                    </StackPanel>
+                </Button>
                 <Button x:Name="btnLoadGame" ToolTip="Load a game" Margin="3" Click="btnLoadGame_Click" IsEnabled="True">
                     <StackPanel>
                         <Image Source="./Resources/open.ico" Height="16"></Image>
@@ -22,16 +28,16 @@
                         <TextBlock Foreground="Black">Save</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button ToolTip="About this app..." x:Name="btnOpenCredits" Click="btnOpenCredits_Click" IsEnabled="True">
-                    <StackPanel>
-                        <Image Source="./Resources/mark.png" Height="16"></Image>
-                        <TextBlock>About</TextBlock>
-                    </StackPanel>
-                </Button>
                 <Button ToolTip="Undo last move" x:Name="btnUndo" Click="btnUndo_Click" IsEnabled="True">
                     <StackPanel>
                         <Image Source="./Resources/undo.png" Height="16"></Image>
                         <TextBlock>Undo</TextBlock>
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="About this app..." x:Name="btnOpenCredits" Click="btnOpenCredits_Click" IsEnabled="True">
+                    <StackPanel>
+                        <Image Source="./Resources/mark.png" Height="16"></Image>
+                        <TextBlock>About</TextBlock>
                     </StackPanel>
                 </Button>
             </ToolBar>

@@ -32,7 +32,7 @@ namespace TP_Othello.GameLogics
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Stopwatch[] playersTimer;
-        private Timer refreshTimer;
+        private DispatcherTimer refreshTimer;
 
         private List<Move> playedMovesStack;
 
@@ -138,9 +138,9 @@ namespace TP_Othello.GameLogics
             this.logicalBoard = new Board(BOARD_DIMENSIONS.Width, BOARD_DIMENSIONS.Height);
             playedMovesStack = new List<Move>();
 
-            refreshTimer = new Timer(1000);
-            refreshTimer.Elapsed += OnTimerEvent;
-            refreshTimer.AutoReset = true;
+            refreshTimer = new DispatcherTimer();
+            refreshTimer.Tick += OnTimerEvent;
+            refreshTimer.Interval = TimeSpan.FromSeconds(1);
 
             playersTimer = new Stopwatch[2];
             playersTimer[0] = new Stopwatch();
@@ -368,7 +368,7 @@ namespace TP_Othello.GameLogics
         /// </summary>
         /// <param name="sender">Event sender object</param>
         /// <param name="e">Args</param>
-        private void OnTimerEvent(object sender, ElapsedEventArgs e)
+        private void OnTimerEvent(object sender, EventArgs e)
         {
             if (sender is Timer timer)
             {
@@ -446,9 +446,13 @@ namespace TP_Othello.GameLogics
         public bool PlayMove(int column, int line, bool isWhite)
         {
             Point movePos = new Point(column, line);
+            Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(movePos)).FirstOrDefault();
+            if(targetMove != null)
+            {
+                logicalBoard.ApplyMove(targetMove);
+            }
 
-
-            throw new NotImplementedException();
+            return false;
         }
 
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)

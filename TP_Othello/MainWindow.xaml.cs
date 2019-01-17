@@ -93,7 +93,13 @@ namespace TP_Othello
                     MessageBox.Show($"Unable to load the game : {exception.Message}", "Load file error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            Debug.Write("Load game");
+        }
+
+        private void btnNewGame_Click(object sender, RoutedEventArgs e)
+        {
+            this.boardView = new BoardView();
+            this.game = new GameWithBoardInItsName(boardView);
+            game.StartGame();
         }
 
         private void btnUndo_Click(object sender, RoutedEventArgs e)
