@@ -16,23 +16,26 @@ namespace TP_Othello.GameLogics
     [Serializable]
     /// <summary>
     /// This class is the main engine for the Othello game. It synchronizes the board display and the logic behind.
-    /// <see cref="Board"/>
+    /// <see cref="LogicalBoard"/>
     /// <see cref="TP_Othello.BoardView"/>
     /// </summary>
     class GameWithBoardInItsName : IPlayable.IPlayable, INotifyPropertyChanged, ISerializable
     {
-        BoardView boardView;
-        Board logicalBoard;
+        private BoardView boardView;
+        private LogicalBoard logicalBoard;
 
         private Size BOARD_DIMENSIONS = new System.Drawing.Size(9, 7);
 
         // Those are the event handlers passed to the cells so the event fired for them is handled here
-        private event MouseButtonEventHandler CellClickedEvent;
-        private event MouseEventHandler CellHoverEvent;
+        public event MouseButtonEventHandler CellClickedEvent;
+        public event MouseEventHandler CellHoverEvent;
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Stopwatch[] playersTimer;
         private DispatcherTimer refreshTimer;
+
+        private TimeSpan whiteTimeOffset;
+        private TimeSpan blackTimeOffset;
 
         private List<Move> playedMovesStack;
 
@@ -135,7 +138,7 @@ namespace TP_Othello.GameLogics
         /// </summary>
         public GameWithBoardInItsName()
         {
-            this.logicalBoard = new Board(BOARD_DIMENSIONS.Width, BOARD_DIMENSIONS.Height);
+            this.logicalBoard = new LogicalBoard(BOARD_DIMENSIONS.Width, BOARD_DIMENSIONS.Height);
             playedMovesStack = new List<Move>();
 
             refreshTimer = new DispatcherTimer();
@@ -145,6 +148,9 @@ namespace TP_Othello.GameLogics
             playersTimer = new Stopwatch[2];
             playersTimer[0] = new Stopwatch();
             playersTimer[1] = new Stopwatch();
+
+            blackTimeOffset = new TimeSpan();
+            whiteTimeOffset = new TimeSpan();
         }
 
         /// <summary>
@@ -159,9 +165,9 @@ namespace TP_Othello.GameLogics
             this.boardView = boardView;
 
             boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
-            InitBoard();
 
             Random random = new Random();
+            InitBoard();
 
             // starts with a random player
             whitePlayerTurn = random.Next(0, 2) == 1;
@@ -175,19 +181,16 @@ namespace TP_Othello.GameLogics
         private GameWithBoardInItsName(SerializationInfo info, StreamingContext context) : this()
         {
             // Add the saved play time of each player 
-            TimeSpan timeSpanWhite = new TimeSpan().Add((TimeSpan)info.GetValue("WhiteTime", typeof(TimeSpan)));
-            Stopwatch whiteStopwatch = GetPlayerStopwatch(true);
-            whiteStopwatch.Reset();
-            whiteStopwatch.Elapsed.Add(timeSpanWhite);
+            whiteTimeOffset = new TimeSpan().Add((TimeSpan)info.GetValue("WhiteTime", typeof(TimeSpan)));
+            blackTimeOffset = new TimeSpan().Add((TimeSpan)info.GetValue("BlackTime", typeof(TimeSpan)));
 
-            TimeSpan timeSpanBlack = new TimeSpan().Add((TimeSpan)info.GetValue("BlackTime", typeof(TimeSpan)));
-            Stopwatch blackStopwatch = GetPlayerStopwatch(false);
-            blackStopwatch.Reset();
-            blackStopwatch.Elapsed.Add(timeSpanBlack);
+            GetPlayerStopwatch(true).Reset();
+            GetPlayerStopwatch(false).Reset();
+            TimeWhite = (GetPlayerStopwatch(whitePlayerTurn).Elapsed + whiteTimeOffset).ToString(@"hh\:mm\:ss");
+            TimeBlack = (GetPlayerStopwatch(whitePlayerTurn).Elapsed + blackTimeOffset).ToString(@"hh\:mm\:ss");
 
             whitePlayerTurn = info.GetBoolean("Turn");
-            this.logicalBoard = (Board)info.GetValue("Board", typeof(Board));
-
+            this.logicalBoard = (LogicalBoard)info.GetValue("Board", typeof(LogicalBoard));
 
             ScoreWhite = info.GetInt32("ScoreWhite");
             ScoreBlack = info.GetInt32("ScoreBlack");
@@ -374,16 +377,13 @@ namespace TP_Othello.GameLogics
         /// <param name="e">Args</param>
         private void OnTimerEvent(object sender, EventArgs e)
         {
-            if (sender is DispatcherTimer timer)
+            if (whitePlayerTurn)
             {
-                if (whitePlayerTurn)
-                {
-                    TimeWhite = GetPlayerStopwatch(whitePlayerTurn).Elapsed.ToString(@"hh\:mm\:ss");
-                }
-                else
-                {
-                    TimeBlack = GetPlayerStopwatch(whitePlayerTurn).Elapsed.ToString(@"hh\:mm\:ss");
-                }
+                TimeWhite = (GetPlayerStopwatch(whitePlayerTurn).Elapsed + whiteTimeOffset).ToString(@"hh\:mm\:ss");
+            }
+            else
+            {
+                TimeBlack = (GetPlayerStopwatch(whitePlayerTurn).Elapsed + blackTimeOffset).ToString(@"hh\:mm\:ss");
             }
         }
 
@@ -490,13 +490,13 @@ namespace TP_Othello.GameLogics
         /// </summary>
         /// <param name="info">Serialized informations storage object</param>
         /// <param name="context">The stream context used by the serialization process</param>
-        /// Will also call <seealso cref="Board.GetObjectData(SerializationInfo, StreamingContext)"/>
+        /// Will also call <seealso cref="LogicalBoard.GetObjectData(SerializationInfo, StreamingContext)"/>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("Turn", whitePlayerTurn);
             info.AddValue("WhiteTime", GetPlayerStopwatch(true).Elapsed);
             info.AddValue("BlackTime", GetPlayerStopwatch(false).Elapsed);
-            info.AddValue("Board", this.logicalBoard, typeof(Board));
+            info.AddValue("Board", this.logicalBoard, typeof(LogicalBoard));
             info.AddValue("ScoreWhite", this.ScoreWhite);
             info.AddValue("ScoreBlack", this.ScoreBlack);
         }

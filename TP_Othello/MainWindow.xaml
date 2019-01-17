@@ -16,32 +16,38 @@
         <Style x:Key="PlayerInfosLayout" TargetType="StackPanel">
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="Width" Value="Auto"/>
-            <Setter Property="Margin" Value="15,0,15,0" />
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Margin" Value="5,0,5,0" />
         </Style>
     </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="New" Executed="NewCommandExecuted"/>
+        <CommandBinding Command="Save" Executed="SaveCommandExecuted"/>
+        <CommandBinding Command="Open" Executed="OpenCommandExecuted"/>
+        <CommandBinding Command="Undo" Executed="UndoCommandExecuted"/>
+    </Window.CommandBindings>
     <DockPanel HorizontalAlignment="Stretch">
         <ToolBarTray DockPanel.Dock="Top">
             <ToolBar>
-                <Button x:Name="btnNewGame" ToolTip="Reset the game" Margin="3" Click="btnNewGame_Click" IsEnabled="True">
+                <Button Command="New" x:Name="btnNewGame" ToolTip="Reset the game" Margin="3" IsEnabled="True">
                     <StackPanel>
                         <Image Source="./Resources/new.png" Height="16"></Image>
                         <TextBlock Foreground="Black">New</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="btnLoadGame" ToolTip="Load a game" Margin="3" Click="btnLoadGame_Click" IsEnabled="True">
+                <Button x:Name="btnLoadGame" Command="Open" ToolTip="Load a game" Margin="3" IsEnabled="True">
                     <StackPanel>
                         <Image Source="./Resources/open.ico" Height="16"></Image>
                         <TextBlock Foreground="Black">Load</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button x:Name="btnSaveGame" ToolTip="Save the current game" Margin="3" Click="btnSaveGame_Click" IsEnabled="True">
+                <Button Command="Save" x:Name="btnSaveGame" ToolTip="Save the current game" Margin="3" IsEnabled="True">
                     <StackPanel>
                         <Image Source="./Resources/save.ico" Height="16"></Image>
                         <TextBlock Foreground="Black">Save</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button ToolTip="Undo last move" x:Name="btnUndo" Click="btnUndo_Click" IsEnabled="True">
+                <Button ToolTip="Undo last move" Command="Undo" x:Name="btnUndo" IsEnabled="True">
                     <StackPanel>
                         <Image Source="./Resources/undo.png" Height="16"></Image>
                         <TextBlock>Undo</TextBlock>
@@ -71,10 +77,8 @@
         </StackPanel>
 
 
-        <local:BoardView x:Name="boardView" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Mode=Self}}">
+        <local:BoardView x:Name="boardView" >
 
         </local:BoardView>
-
-
     </DockPanel>
 </Window>

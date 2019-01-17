@@ -40,10 +40,11 @@ namespace TP_Othello
         /// </summary>
         public void InitBoardView(System.Drawing.Size boardDimensions, MouseButtonEventHandler cellClickHandler, MouseEventHandler cellHoverHandler)
         {
-            //this.GridBoard.Width = ;
+            this.GridBoard.Children.Clear();
+            this.GridBoard.RowDefinitions.Clear();
+            this.GridBoard.ColumnDefinitions.Clear();
             boardCells = new BoardCell[boardDimensions.Width, boardDimensions.Height];
 
-            // creating cells row by row but it doesn't really change anything
             for(int i = 0; i < boardDimensions.Height; i++)
             {
                 RowDefinition rowDefinition = new RowDefinition();

@@ -30,9 +30,15 @@ namespace TP_Othello
         public MainWindow()
         {
             InitializeComponent();
-            
+
+            CreateGame();
+        }
+
+        public void CreateGame()
+        {
             this.game = new GameWithBoardInItsName(boardView);
             this.DataContext = game;
+
             game.StartGame();
         }
 
@@ -41,14 +47,19 @@ namespace TP_Othello
             MessageBox.Show("Othello Game made for the C# .NET and AI course HE-Arc 2018-2019.\nGrava Maxime, Herbelin Ludovic", "About this app");
         }
 
-        private void btnSaveGame_Click(object sender, RoutedEventArgs e)
+        private void NewCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            CreateGame();
+        }
+
+        private void SaveCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
             saveDialog.Filter = "Arc Othello files (*.arcgh)|*.arcgh|All files (*.*)|*.*";
             saveDialog.DefaultExt = "arcgh";
             saveDialog.AddExtension = true;
 
-            if(saveDialog.ShowDialog() == true)
+            if (saveDialog.ShowDialog() == true)
             {
                 // using code from :
                 // https://www.dotnetperls.com/serialize-list
@@ -60,18 +71,18 @@ namespace TP_Othello
                         binaryFormatter.Serialize(stream, game);
                     }
                 }
-                catch(IOException exception)
+                catch (IOException exception)
                 {
                     MessageBox.Show($"Unable to save the game : {exception.Message}", "Save file error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
 
-        private void btnLoadGame_Click(object sender, RoutedEventArgs e)
+        private void OpenCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog openDialog = new OpenFileDialog();
             openDialog.Filter = "Arc Othello files (*.arcgh)|*.arcgh|All files (*.*)|*.*";
-            if (openDialog.ShowDialog().HasValue)
+            if (openDialog.ShowDialog() == true)
             {
                 try
                 {
@@ -95,14 +106,7 @@ namespace TP_Othello
             }
         }
 
-        private void btnNewGame_Click(object sender, RoutedEventArgs e)
-        {
-            this.boardView = new BoardView();
-            this.game = new GameWithBoardInItsName(boardView);
-            game.StartGame();
-        }
-
-        private void btnUndo_Click(object sender, RoutedEventArgs e)
+        private void UndoCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             game.UndoLastMove();
         }

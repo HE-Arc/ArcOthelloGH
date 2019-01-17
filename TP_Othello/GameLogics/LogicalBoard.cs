@@ -10,14 +10,14 @@ using System.Runtime.Serialization;
 namespace TP_Othello.GameLogics
 {
     [Serializable]
-    class Board : ISerializable
+    class LogicalBoard : ISerializable
     {
         private int[,] board;
         private Size boardSize;
 
         public int[,] BoardArray { get => board; private set => board = value; }
 
-        public Board(int width, int height)
+        public LogicalBoard(int width, int height)
         {
             board = new int[width, height];
             boardSize = new Size(width, height);
@@ -25,7 +25,7 @@ namespace TP_Othello.GameLogics
             InitBoard();
         }
         
-        private Board(SerializationInfo info, StreamingContext context)
+        private LogicalBoard(SerializationInfo info, StreamingContext context)
         {
             Object boardObject = info.GetValue("BoardArray", typeof(Array));
 
