@@ -9,6 +9,9 @@ using System.Runtime.Serialization;
 
 namespace TP_Othello.GameLogics
 {
+    /// <summary>
+    /// This class is the logical part of the Othello Board game. It is basically a 2d int array with helpers such as move checking etc.
+    /// </summary>
     [Serializable]
     class LogicalBoard : ISerializable
     {
@@ -25,8 +28,14 @@ namespace TP_Othello.GameLogics
             InitBoard();
         }
         
+        /// <summary>
+        /// This is the constructor called when the board is unserialized
+        /// </summary>
+        /// <param name="info">The list of serialized values</param>
+        /// <param name="context">The stream where the data come from</param>
         private LogicalBoard(SerializationInfo info, StreamingContext context)
         {
+            // we get the board as an array and we read the values from it
             Object boardObject = info.GetValue("BoardArray", typeof(Array));
 
             int[,] board = null;
@@ -52,7 +61,7 @@ namespace TP_Othello.GameLogics
         }
 
         /// <summary>
-        /// Init the board with default value and place the starting pawns
+        /// Init the board with default value -1 (empty cell)
         /// </summary>
         public void InitBoard()
         {
@@ -140,6 +149,9 @@ namespace TP_Othello.GameLogics
         }
 
 
+        /// <summary>
+        /// Helper function to debug the board
+        /// </summary>
         public void drawBo()
         {
             Debug.Write("\n-------------------------\n");

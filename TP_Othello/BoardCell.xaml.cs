@@ -59,7 +59,12 @@ namespace TP_Othello
             this.contentLabel.Style = FindResource("CellHint") as Style;
             //contentLabel.Opacity = 0.6;
         }
-
+        
+        /// <summary>
+        /// Connects the handlers to the event of the cells and remove (if any) there was before
+        /// </summary>
+        /// <param name="cellClicked"></param>
+        /// <param name="cellHover"></param>
         public void SetHandlers(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover)
         {
             if(CellHoverHandler != null && CellClickHandler != null)
@@ -75,6 +80,10 @@ namespace TP_Othello
             MouseEnter += CellHoverHandler;
         }
 
+        /// <summary>
+        /// Displays one of the pawn on the current cell using the styles
+        /// </summary>
+        /// <param name="whitePlayer">white or black player(false)</param>
         public void SetPawnPlayer(bool whitePlayer)
         {
             this.contentLabel.Style = this.FindResource("CellBaseState") as Style;
@@ -92,10 +101,8 @@ namespace TP_Othello
 
         public void UnsetPawnPlayer()
         {
-            Debug.Write(contentLabel.Opacity);
             this.contentLabel.Style = FindResource("CellBaseState") as Style;
             this.imageContainer.Style = this.FindResource("PawnBaseState") as Style;
-            Debug.Write(contentLabel.Opacity);
         }
     }
 }

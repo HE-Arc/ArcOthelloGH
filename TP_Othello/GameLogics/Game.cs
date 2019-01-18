@@ -97,39 +97,6 @@ namespace TP_Othello.GameLogics
                 NotifyPropertyChanged("ScoreBlack");
             }
         }
-
-   
-        /// <summary>
-        /// This method is called to refresh the board's UI and propagate the new Event handlers
-        /// Called when board is unserialized and we need to reflect its state on the UI
-        /// </summary>
-        private void RefreshBoardView()
-        {
-            int[,] boardArray = logicalBoard.BoardArray;
-            for(int i = 0; i < boardArray.GetLength(0); i++)
-            {
-                for(int j = 0; j < boardArray.GetLength(1); j++)
-                {
-                    if (boardArray[i, j] == -1)
-                        boardView.UnsetPawnCell(new Point(i, j));
-                    else
-                        boardView.SetPawnCell(new Point(i, j), boardArray[i,j] == 1 ? true : false);
-                }
-            }
-
-            boardView.SetHandlers(this.CellClickedEventHandler, this.CellHoverEventHandler);
-        }
-
-        /// <summary>
-        /// This method is called when a game is loaded to set the game's board and update some informations on it.
-        /// Will call <see cref="RefreshBoardView"/>
-        /// </summary>
-        /// <param name="boardView"></param>
-        public void SetBoardView(BoardView boardView)
-        {
-            this.boardView = boardView;
-            RefreshBoardView();
-        }
         #endregion
 
         /// <summary>
@@ -197,16 +164,42 @@ namespace TP_Othello.GameLogics
         }
 
         /// <summary>
+        /// This method is called to refresh the board's UI and propagate the new Event handlers
+        /// Called when board is unserialized and we need to reflect its state on the UI
+        /// </summary>
+        private void RefreshBoardView()
+        {
+            int[,] boardArray = logicalBoard.BoardArray;
+            for (int i = 0; i < boardArray.GetLength(0); i++)
+            {
+                for (int j = 0; j < boardArray.GetLength(1); j++)
+                {
+                    UpdatePawnCellDisplay(new Point(i, j), boardArray[i, j]);
+                }
+            }
+
+            boardView.SetHandlers(this.CellClickedEventHandler, this.CellHoverEventHandler);
+        }
+
+        /// <summary>
+        /// This method is called when a game is loaded to set the game's board and update some informations on it.
+        /// Will call <see cref="RefreshBoardView"/>
+        /// </summary>
+        /// <param name="boardView"></param>
+        public void SetBoardView(BoardView boardView)
+        {
+            this.boardView = boardView;
+            RefreshBoardView();
+        }
+
+        /// <summary>
         /// This method inits some data for the first game turn.
         /// It looks for the possible moves and starts the timer.
         /// </summary>
         public void StartGame()
         {
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
-            foreach (Move m in currentPossibleMoves)
-            {
-                boardView.SetMoveHint(m.position);
-            }
+            UpdateHintsDisplay();
 
             GetPlayerStopwatch(whitePlayerTurn).Start();
             refreshTimer.Start();
@@ -244,25 +237,21 @@ namespace TP_Othello.GameLogics
             GetPlayerStopwatch(whitePlayerTurn).Stop();
             whitePlayerTurn = !whitePlayerTurn;
 
+            UpdateHintsDisplay(false);
+
             var nextPossibleMoves = this.logicalBoard.GetPossibleMoves(whitePlayerTurn);
-
-            foreach(Move m in nextPossibleMoves)
-            {
-                boardView.SetMoveHint(m.position);
-            }
-
             if (!nextPossibleMoves.Any())
             {
                 // if the possible moves for the previous player and the current one are empty nobody can play anymore, it's the end of the game
                 if (!currentPossibleMoves.Any())
                 {
                     // end game
-                    Debug.Write("Game ended");
                 }
                 // if only the current ones are empty it's to the other play again
                 else
                 {
                     currentPossibleMoves = nextPossibleMoves;
+                    UpdateHintsDisplay();
                     ChangeTurn();
                 }
             }
@@ -270,6 +259,7 @@ namespace TP_Othello.GameLogics
             {
                 GetPlayerStopwatch(whitePlayerTurn).Start();
                 currentPossibleMoves = nextPossibleMoves;
+                UpdateHintsDisplay();
             }
         }
 
@@ -281,6 +271,43 @@ namespace TP_Othello.GameLogics
         private Stopwatch GetPlayerStopwatch(bool whitePlayer)
         {
             return playersTimer[whitePlayer ? 0 : 1];
+        }
+
+        /// <summary>
+        /// This method removes or displays the playable cells hints of the current moves
+        /// </summary>
+        /// <param name="show">Whether to show or hide the hints</param>
+        private void UpdateHintsDisplay(bool show = true)
+        {
+            if(boardView != null)
+            {
+                foreach(Move move in currentPossibleMoves)
+                {
+                    if (show)
+                        boardView.SetMoveHint(move.position);
+                    else
+                        boardView.ResetHint(move.position);
+                }
+            }
+        }
+
+        private void UpdatePawnCellDisplay(Point position, int value)
+        {
+            if(boardView != null)
+            {
+                switch(value)
+                {
+                    case -1:
+                        boardView.UnsetPawnCell(position);
+                        break;
+                    case 0:
+                        boardView.SetPawnCell(position, false);
+                        break;
+                    case 1:
+                        boardView.SetPawnCell(position, true);
+                        break;
+                }
+            }
         }
 
 
@@ -298,12 +325,6 @@ namespace TP_Othello.GameLogics
                 Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(senderCell.BoardPosition)).FirstOrDefault();
                 if(targetMove != null)
                 {
-
-                    foreach (Move m in currentPossibleMoves)
-                    {
-                        boardView.ResetHint(m.position);
-                    }
-
                     playedMovesStack.Add(targetMove);
                     PlayMove(targetMove);
 
@@ -323,12 +344,12 @@ namespace TP_Othello.GameLogics
             List<Point> cellsPosInvert = move.GetChecksToInvert();
             logicalBoard.ApplyMove(move);
 
-            boardView.SetPawnCell(move.position, move.whitePlayer);
+            UpdatePawnCellDisplay(move.position, move.whitePlayer ? 1 : 0);
             score++;
 
             foreach(Point point in cellsPosInvert)
             {
-                boardView.SetPawnCell(point, move.whitePlayer);
+                UpdatePawnCellDisplay(move.position, move.whitePlayer ? 1 : 0);
                 score++;
             }
 
@@ -395,22 +416,20 @@ namespace TP_Othello.GameLogics
             if (playedMovesStack.Count == 0)
                 return;
 
-            foreach(Move move in currentPossibleMoves)
-            {
-                boardView.ResetHint(move.position);
-            }
+            UpdateHintsDisplay(false);
 
             int score = 0;
             Move lastMove = playedMovesStack[playedMovesStack.Count-1];
             playedMovesStack.RemoveAt(playedMovesStack.Count-1);
 
             List<Point> cellsPosInvert = logicalBoard.UndoMove(lastMove);
-            boardView.UnsetPawnCell(lastMove.position);
+
+            UpdatePawnCellDisplay(lastMove.position, -1);
             score++;
 
             foreach (Point point in cellsPosInvert)
             {
-                boardView.SetPawnCell(point, !lastMove.whitePlayer);
+                UpdatePawnCellDisplay(point, !lastMove.whitePlayer ? 1 : 0);
                 score++;
             }
 

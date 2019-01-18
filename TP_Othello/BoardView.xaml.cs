@@ -78,6 +78,11 @@ namespace TP_Othello
             }
         }
 
+        /// <summary>
+        /// Applies the handlers to all board cells
+        /// </summary>
+        /// <param name="cellClickHandler"></param>
+        /// <param name="cellHoverHandler"></param>
         public void SetHandlers(MouseButtonEventHandler cellClickHandler, MouseEventHandler cellHoverHandler)
         {
             for(int i = 0; i < boardCells.GetLength(0); i++)
@@ -89,28 +94,38 @@ namespace TP_Othello
             }
         }
 
+        /// <summary>
+        /// Displays a pawn on a specific cell
+        /// </summary>
+        /// <param name="position">The cell's [x,y] position</param>
+        /// <param name="whitePlayer">White or black player's pawn</param>
         public void SetPawnCell(System.Drawing.Point position, bool whitePlayer)
         {
             boardCells[position.X, position.Y].SetPawnPlayer(whitePlayer);
         }
 
+        /// <summary>
+        /// Removes the pawn's display on a specific cell. Called by the undo
+        /// </summary>
+        /// <param name="position">Cell's position</param>
         public void UnsetPawnCell(System.Drawing.Point position)
         {
             boardCells[position.X, position.Y].UnsetPawnPlayer();
         }
 
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //Debug.Write(e.NewSize);
-            //this.GridBoard.Height = e.NewSize.Height;
-            //this.GridBoard.Width = e.NewSize.Width;
-        }
-
+        /// <summary>
+        /// Displays the specific cell as playable for the user
+        /// </summary>
+        /// <param name="position">Cell's position</param>
         public void SetMoveHint(System.Drawing.Point position)
         {
             boardCells[position.X, position.Y].SetMoveHint();
         }
 
+        /// <summary>
+        /// Removes the hint on the cell as it used to be playable for the user
+        /// </summary>
+        /// <param name="position">Cell's position</param>
         public void ResetHint(System.Drawing.Point position)
         {
             boardCells[position.X, position.Y].ResetHint();

@@ -34,6 +34,9 @@ namespace TP_Othello
             CreateGame();
         }
 
+        /// <summary>
+        /// Creates a new game object and passes the board's display to it
+        /// </summary>
         public void CreateGame()
         {
             this.game = new GameWithBoardInItsName(boardView);
@@ -42,16 +45,31 @@ namespace TP_Othello
             game.StartGame();
         }
 
+        /// <summary>
+        /// Shows that we made dis
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOpenCredits_Click(object sender, RoutedEventArgs e)
         {
             MessageBox.Show("Othello Game made for the C# .NET and AI course HE-Arc 2018-2019.\nGrava Maxime, Herbelin Ludovic", "About this app");
         }
 
+        /// <summary>
+        /// Toolbar's button or shortcut to create a new gmae
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             CreateGame();
         }
 
+        /// <summary>
+        /// Displays the save dialog to save the current game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             SaveFileDialog saveDialog = new SaveFileDialog();
@@ -78,6 +96,11 @@ namespace TP_Othello
             }
         }
 
+        /// <summary>
+        /// Shows the open dialog to load a game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OpenCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             OpenFileDialog openDialog = new OpenFileDialog();
@@ -106,6 +129,11 @@ namespace TP_Othello
             }
         }
 
+        /// <summary>
+        /// Undo the last move
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UndoCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             game.UndoLastMove();
