@@ -62,19 +62,23 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        <StackPanel DockPanel.Dock="Left" Style="{StaticResource PlayerInfosLayout}">
+        <Border x:Name="InfosWhitePlayer" DockPanel.Dock="Left" Style="{StaticResource PlayerTurnBase}">
+            <StackPanel  DockPanel.Dock="Left" Style="{StaticResource PlayerInfosLayout}">
                 <TextBlock Style="{StaticResource PlayerInfos}">Player 1</TextBlock>
                 <TextBlock x:Uid="timerP1"  Style="{StaticResource PlayerInfos}" Text="{Binding TimeWhite, Mode= OneWay}" />
                 <TextBlock x:Uid="scoreP1"  Style="{StaticResource PlayerInfos}" Text="{Binding ScoreWhite, Mode=OneWay}" />
                 <Image Source="Resources/white_pawn.png" Stretch="None"/>
-        </StackPanel>
-        <StackPanel DockPanel.Dock="Right" Style="{StaticResource PlayerInfosLayout}">
-            <TextBlock Style="{StaticResource PlayerInfos}">Player 2</TextBlock>
-            <TextBlock x:Uid="timerP2"  Style="{StaticResource PlayerInfos}" Text="{Binding TimeBlack, Mode= OneWay}" />
-            <TextBlock x:Uid="scoreP2"  Style="{StaticResource PlayerInfos}" Text="{Binding ScoreBlack, Mode= OneWay}" />
-            
-            <Image Source="Resources/black_pawn.png" Stretch="None"/>
-        </StackPanel>
+            </StackPanel>
+        </Border>
+        <Border x:Name="InfosBlackPlayer" DockPanel.Dock="Right" Style="{StaticResource PlayerTurnBase}">
+            <StackPanel  DockPanel.Dock="Right" Style="{StaticResource PlayerInfosLayout}">
+                <TextBlock Style="{StaticResource PlayerInfos}">Player 2</TextBlock>
+                <TextBlock x:Uid="timerP2"  Style="{StaticResource PlayerInfos}" Text="{Binding TimeBlack, Mode= OneWay}" />
+                <TextBlock x:Uid="scoreP2"  Style="{StaticResource PlayerInfos}" Text="{Binding ScoreBlack, Mode= OneWay}" />
+
+                <Image Source="Resources/black_pawn.png" Stretch="None"/>
+            </StackPanel>
+        </Border>
 
 
         <local:BoardView x:Name="boardView" >

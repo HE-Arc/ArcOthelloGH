@@ -22,13 +22,13 @@ namespace TP_Othello.GameLogics
     class GameWithBoardInItsName : IPlayable.IPlayable, INotifyPropertyChanged, ISerializable
     {
         private BoardView boardView;
+        private MainWindow windowView;
         private LogicalBoard logicalBoard;
 
         private Size BOARD_DIMENSIONS = new System.Drawing.Size(9, 7);
 
         // Those are the event handlers passed to the cells so the event fired for them is handled here
         public event MouseButtonEventHandler CellClickedEvent;
-        public event MouseEventHandler CellHoverEvent;
         public event PropertyChangedEventHandler PropertyChanged;
 
         private Stopwatch[] playersTimer;
@@ -118,26 +118,25 @@ namespace TP_Othello.GameLogics
 
             blackTimeOffset = new TimeSpan();
             whiteTimeOffset = new TimeSpan();
+
+            currentPossibleMoves = new List<Move>(); 
         }
+ 
 
         /// <summary>
         /// This is the constructor that should be used in most cases when not using the AI for the tournament
         /// </summary>
         /// <param name="boardView">The BoardView object that the object will update as the game is played</param>
-        public GameWithBoardInItsName(BoardView boardView) : this()
+        public GameWithBoardInItsName(BoardView boardView, MainWindow windowView) : this()
         {
             CellClickedEvent = new MouseButtonEventHandler(CellClickedEventHandler);
-            CellHoverEvent = new MouseEventHandler(CellHoverEventHandler);
 
             this.boardView = boardView;
+            this.windowView = windowView;
 
-            boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent, CellHoverEvent);
+            boardView.InitBoardView(BOARD_DIMENSIONS, CellClickedEvent);
 
-            Random random = new Random();
-            InitBoard();
-
-            // starts with a random player
-            whitePlayerTurn = random.Next(0, 2) == 1;
+            ResetGame();
         }
 
         /// <summary>
@@ -178,7 +177,7 @@ namespace TP_Othello.GameLogics
                 }
             }
 
-            boardView.SetHandlers(this.CellClickedEventHandler, this.CellHoverEventHandler);
+            boardView.SetHandlers(this.CellClickedEventHandler);
         }
 
         /// <summary>
@@ -186,12 +185,36 @@ namespace TP_Othello.GameLogics
         /// Will call <see cref="RefreshBoardView"/>
         /// </summary>
         /// <param name="boardView"></param>
-        public void SetBoardView(BoardView boardView)
+        public void SetViews(BoardView boardView, MainWindow windowView)
         {
             this.boardView = boardView;
+            this.windowView = windowView;
             RefreshBoardView();
         }
 
+        /// <summary>
+        /// This method is called on a game reset for example when an user has won and wants to rematch
+        /// </summary>
+        private void ResetGame()
+        {
+            UpdateHintsDisplay(false);
+            ScoreBlack = ScoreWhite = 0;
+            blackTimeOffset = whiteTimeOffset = TimeSpan.Zero;
+            Array.ForEach(playersTimer, sw => sw.Reset());
+            TimeBlack = TimeWhite = TimeWhite = TimeSpan.Zero.ToString(@"hh\:mm\:ss");
+
+            Random random = new Random();
+
+            // starts with a random player
+            whitePlayerTurn = random.Next(0, 2) == 1;
+
+            logicalBoard.InitBoard();
+            SetBaseGamePawns();
+
+            RefreshBoardView();
+
+            StartGame();
+        }
         /// <summary>
         /// This method inits some data for the first game turn.
         /// It looks for the possible moves and starts the timer.
@@ -199,7 +222,10 @@ namespace TP_Othello.GameLogics
         public void StartGame()
         {
             currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
+
             UpdateHintsDisplay();
+            if (windowView != null)
+                windowView.DisplayPlayerTurnHighlight(whitePlayerTurn);
 
             GetPlayerStopwatch(whitePlayerTurn).Start();
             refreshTimer.Start();
@@ -208,7 +234,7 @@ namespace TP_Othello.GameLogics
         /// <summary>
         /// This method sets the center pawns 
         /// </summary>
-        private void InitBoard()
+        private void SetBaseGamePawns()
         {
             //We get the center
             int centerX = Convert.ToInt32(Math.Floor(BOARD_DIMENSIONS.Width / 2.0) - 1);
@@ -236,6 +262,8 @@ namespace TP_Othello.GameLogics
         {
             GetPlayerStopwatch(whitePlayerTurn).Stop();
             whitePlayerTurn = !whitePlayerTurn;
+            if (windowView != null)
+                windowView.DisplayPlayerTurnHighlight(whitePlayerTurn);
 
             UpdateHintsDisplay(false);
 
@@ -245,7 +273,11 @@ namespace TP_Othello.GameLogics
                 // if the possible moves for the previous player and the current one are empty nobody can play anymore, it's the end of the game
                 if (!currentPossibleMoves.Any())
                 {
-                    // end game
+                    string playerName = ScoreWhite >= ScoreBlack ? "White player" : "Black player";
+                    if (windowView != null && windowView.DisplayReplayDialog(playerName))
+                    {
+                        ResetGame();
+                    }
                 }
                 // if only the current ones are empty it's to the other play again
                 else
@@ -255,6 +287,7 @@ namespace TP_Othello.GameLogics
                     ChangeTurn();
                 }
             }
+            // otherwise we switch player turns regularly
             else
             {
                 GetPlayerStopwatch(whitePlayerTurn).Start();
@@ -349,7 +382,7 @@ namespace TP_Othello.GameLogics
 
             foreach(Point point in cellsPosInvert)
             {
-                UpdatePawnCellDisplay(move.position, move.whitePlayer ? 1 : 0);
+                UpdatePawnCellDisplay(point, move.whitePlayer ? 1 : 0);
                 score++;
             }
 
@@ -366,12 +399,14 @@ namespace TP_Othello.GameLogics
         }
 
         /// <summary>
-        /// This is the handler function of the hover on a cell. It is fired by the BoardCell objects
+        /// /!\ legacy code might be needed for styles or else later /!\
+        /// 
+        /// This is the handler function of the hover on a cell. It is fired by the BoardCell objects. 
         /// </summary>
         /// <see cref="BoardCell"/>
         /// <param name="Sender">Sender of the event, should be a BoardCell</param>
         /// <param name="e">Event arguments</param>
-        private void CellHoverEventHandler(object Sender, MouseEventArgs e)
+        /*private void CellHoverEventHandler(object Sender, MouseEventArgs e)
         {
             // if the sender object is a BoardCell we cast it and null checks (equivalent to ...  != null)
             if (Sender is BoardCell senderCell)
@@ -385,11 +420,11 @@ namespace TP_Othello.GameLogics
                 {
                     Debug.Write("Cell is playable");
                     senderCell.Highlight();
-                }*/
+                }
                 //Debug.WriteLine("Cell hovered");
                 //Debug.WriteLine(senderCell.CellValue);
             }
-        }
+        }*/
 
         /// <summary>
         /// This function is raised by the players timer

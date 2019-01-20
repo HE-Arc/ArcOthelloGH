@@ -38,7 +38,7 @@ namespace TP_Othello
         /// This method initializes the Grid's layout and the sub-usercontrols board cells
         /// <see cref="BoardCell"/>
         /// </summary>
-        public void InitBoardView(System.Drawing.Size boardDimensions, MouseButtonEventHandler cellClickHandler, MouseEventHandler cellHoverHandler)
+        public void InitBoardView(System.Drawing.Size boardDimensions, MouseButtonEventHandler cellClickHandler)
         {
             this.GridBoard.Children.Clear();
             this.GridBoard.RowDefinitions.Clear();
@@ -67,7 +67,7 @@ namespace TP_Othello
             { 
                 for (int i = 0; i < boardDimensions.Width; i++)
                 {
-                    BoardCell boardCell = new BoardCell(cellClickHandler, cellHoverHandler, new System.Drawing.Point(i, j));
+                    BoardCell boardCell = new BoardCell(cellClickHandler, new System.Drawing.Point(i, j));
 
                     Grid.SetColumn(boardCell, i);
                     Grid.SetRow(boardCell, j);
@@ -83,13 +83,13 @@ namespace TP_Othello
         /// </summary>
         /// <param name="cellClickHandler"></param>
         /// <param name="cellHoverHandler"></param>
-        public void SetHandlers(MouseButtonEventHandler cellClickHandler, MouseEventHandler cellHoverHandler)
+        public void SetHandlers(MouseButtonEventHandler cellClickHandler)
         {
             for(int i = 0; i < boardCells.GetLength(0); i++)
             {
                 for(int j = 0; j < boardCells.GetLength(1); j++)
                 {
-                    boardCells[i, j].SetHandlers(cellClickHandler, cellHoverHandler);
+                    boardCells[i, j].SetHandlers(cellClickHandler);
                 }
             }
         }

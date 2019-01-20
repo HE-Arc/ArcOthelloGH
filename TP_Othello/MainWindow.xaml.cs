@@ -39,7 +39,7 @@ namespace TP_Othello
         /// </summary>
         public void CreateGame()
         {
-            this.game = new GameWithBoardInItsName(boardView);
+            this.game = new GameWithBoardInItsName(boardView, this);
             this.DataContext = game;
 
             game.StartGame();
@@ -114,7 +114,7 @@ namespace TP_Othello
                         BinaryFormatter binaryFormatter = new BinaryFormatter();
                         GameWithBoardInItsName unserializedGame = (GameWithBoardInItsName)binaryFormatter.Deserialize(stream);
 
-                        unserializedGame.SetBoardView(this.boardView);
+                        unserializedGame.SetViews(this.boardView, this);
 
                         this.game = unserializedGame;
                         this.DataContext = this.game;
@@ -137,6 +137,30 @@ namespace TP_Othello
         private void UndoCommandExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             game.UndoLastMove();
+        }
+
+        /// <summary>
+        /// This method is called when the game is over and one of the players has won. It asks the user(s) for rematch
+        /// </summary>
+        /// <param name="playerName">The player's name by default black or white</param>
+        /// <returns>True if the user(s) wants to play again</returns>
+        public bool DisplayReplayDialog(string playerName)
+        {
+            MessageBoxResult result = MessageBox.Show($"Game is over. {playerName} has won !.\nPlay again ?", "Game over", MessageBoxButton.YesNo);
+            return result == MessageBoxResult.Yes;
+        }
+
+        /// <summary>
+        /// This method displays a hint on the UI depending on the player's turn
+        /// </summary>
+        /// <param name="whitePlayer">Whether it's the white player's turn</param>
+        public void DisplayPlayerTurnHighlight(bool whitePlayer)
+        {
+            Border targetPlayerInfos = whitePlayer ? InfosWhitePlayer : InfosBlackPlayer;
+            Border other = whitePlayer ? InfosBlackPlayer : InfosWhitePlayer;
+
+            targetPlayerInfos.Style = FindResource("PlayerTurnHighlight") as Style;
+            other.Style = FindResource("PlayerTurnBase") as Style;
         }
     }
 }

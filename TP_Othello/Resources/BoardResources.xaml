@@ -6,13 +6,16 @@
     -->
     <Style x:Key="PawnBaseState" TargetType="Image">
         <Setter Property="Source" Value="white_pawn.png"/>
-        <Setter Property="Visibility" Value="Hidden"/>
+        <!--<Setter Property="Visibility" Value="Hidden"/>-->
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="Stretch" Value="UniformToFill"/>
     </Style>
-    
+
     <!--
     The style with the black and white pawn are based on the same one which has the image's visibility and maybe future changes
     -->
-    <Style x:Key="PawnPlayed" TargetType="Image">
+    <Style x:Key="PawnPlayed" TargetType="Image" BasedOn="{StaticResource PawnBaseState}">
         <Setter Property="Visibility" Value="Visible"/>
         <Setter Property="Opacity" Value="1.0"/>
     </Style>
@@ -20,8 +23,6 @@
         <Setter Property="Source" Value="white_pawn.png"/>
     </Style>
     <Style x:Key="PawnBlack" TargetType="Image" BasedOn="{StaticResource PawnPlayed}">
-        <!--<Setter Property="Source" Value="pawn_basic_black.png"/>-->
-        
         <Setter Property="Source" Value="black_pawn.png"/>
     </Style>
 
@@ -74,8 +75,27 @@
                     </BeginStoryboard>
                 </EventTrigger.Actions>
             </EventTrigger>
-      
+
 
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="PlayerTurnBase" TargetType="Border">
+        <Setter Property="BorderThickness" Value="10"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="PlayerTurnHighlight" TargetType="Border" BasedOn="{StaticResource PlayerTurnBase}">
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="-1,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FF58FF3E" Offset="0"/>
+                    <GradientStop Color="#FF199119"/>
+                    <GradientStop Color="#FF58FF3E"/>
+                    <GradientStop Color="#FF199119" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

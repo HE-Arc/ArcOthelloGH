@@ -27,7 +27,6 @@ namespace TP_Othello
         public System.Drawing.Point BoardPosition { get => boardPosition; private set => boardPosition = value; }
 
         private MouseButtonEventHandler CellClickHandler;
-        private MouseEventHandler CellHoverHandler;
 
         /// <summary>
         /// Constructor for the BoardCell object
@@ -35,13 +34,13 @@ namespace TP_Othello
         /// <param name="cellClicked">The reference of the EventHandler that will handle the mouse clicks</param>
         /// <param name="cellHover">The reference of the EventHandler that will handle the mouse hovers</param>
         /// <param name="boardPosition">The position in the board, used so we don't need to search for it when it fires an event</param>
-        public BoardCell(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover, System.Drawing.Point boardPosition)
+        public BoardCell(MouseButtonEventHandler cellClicked, System.Drawing.Point boardPosition)
         {
             InitializeComponent();
 
             this.BoardPosition = boardPosition;
 
-            SetHandlers(cellClicked, cellHover);
+            SetHandlers(cellClicked);
         }
 
 
@@ -65,19 +64,16 @@ namespace TP_Othello
         /// </summary>
         /// <param name="cellClicked"></param>
         /// <param name="cellHover"></param>
-        public void SetHandlers(MouseButtonEventHandler cellClicked, MouseEventHandler cellHover)
+        public void SetHandlers(MouseButtonEventHandler cellClicked)
         {
-            if(CellHoverHandler != null && CellClickHandler != null)
+            if(CellClickHandler != null)
             {
                 MouseLeftButtonDown -= CellClickHandler;
-                MouseEnter -= CellHoverHandler;
             }
 
-            this.CellHoverHandler = cellHover;
             this.CellClickHandler = cellClicked;
 
             MouseLeftButtonDown += CellClickHandler;
-            MouseEnter += CellHoverHandler;
         }
 
         /// <summary>
