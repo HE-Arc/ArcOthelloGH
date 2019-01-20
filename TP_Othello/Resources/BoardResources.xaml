@@ -6,10 +6,9 @@
     -->
     <Style x:Key="PawnBaseState" TargetType="Image">
         <Setter Property="Source" Value="white_pawn.png"/>
-        <!--<Setter Property="Visibility" Value="Hidden"/>-->
+        <Setter Property="Visibility" Value="Hidden"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="HorizontalAlignment" Value="Center"/>
-        <Setter Property="Stretch" Value="UniformToFill"/>
     </Style>
 
     <!--
@@ -64,7 +63,7 @@
             </EventTrigger>
 
 
-            <EventTrigger RoutedEvent="Label.MouseDown">
+            <EventTrigger RoutedEvent="Label.PreviewMouseLeftButtonDown">
                 <EventTrigger.Actions>
                     <BeginStoryboard>
                         <Storyboard>
