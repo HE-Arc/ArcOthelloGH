@@ -26,6 +26,7 @@
         <CommandBinding Command="Save" Executed="SaveCommandExecuted"/>
         <CommandBinding Command="Open" Executed="OpenCommandExecuted"/>
         <CommandBinding Command="Undo" Executed="UndoCommandExecuted"/>
+        <CommandBinding Command="Help" Executed="HelpCommandExecuted"/>
     </Window.CommandBindings>
     <DockPanel HorizontalAlignment="Stretch">
         <ToolBarTray DockPanel.Dock="Top">
@@ -54,7 +55,7 @@
                         <TextBlock>Undo</TextBlock>
                     </StackPanel>
                 </Button>
-                <Button ToolTip="About this app..." x:Name="btnOpenCredits" Click="btnOpenCredits_Click" IsEnabled="True">
+                <Button ToolTip="About this app..." x:Name="btnOpenCredits" Command="Help" IsEnabled="True">
                     <StackPanel>
                         <Image Source="./Resources/mark.png" Height="16"></Image>
                         <TextBlock>About</TextBlock>

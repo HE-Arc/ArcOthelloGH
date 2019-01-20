@@ -324,6 +324,11 @@ namespace TP_Othello.GameLogics
             }
         }
 
+        /// <summary>
+        /// Helper to update the view with checks
+        /// </summary>
+        /// <param name="position">Pawn's to update's pos</param>
+        /// <param name="value">The cell value : -1 to remove the pawn, 0 for black and 1 for white</param>
         private void UpdatePawnCellDisplay(Point position, int value)
         {
             if(boardView != null)

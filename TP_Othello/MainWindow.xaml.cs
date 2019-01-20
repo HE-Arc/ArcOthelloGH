@@ -46,16 +46,6 @@ namespace TP_Othello
         }
 
         /// <summary>
-        /// Shows that we made dis
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnOpenCredits_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Othello Game made for the C# .NET and AI course HE-Arc 2018-2019.\nGrava Maxime, Herbelin Ludovic", "About this app");
-        }
-
-        /// <summary>
         /// Toolbar's button or shortcut to create a new gmae
         /// </summary>
         /// <param name="sender"></param>
@@ -161,6 +151,16 @@ namespace TP_Othello
 
             targetPlayerInfos.Style = FindResource("PlayerTurnHighlight") as Style;
             other.Style = FindResource("PlayerTurnBase") as Style;
+        }
+
+        /// <summary>
+        /// Shows that we made dis
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void HelpCommandExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            MessageBox.Show("Othello Game made for the C# .NET and AI course HE-Arc 2018-2019.\nGrava Maxime, Herbelin Ludovic\nIf you're looking for the Othello rules you better check google.", "About this app");
         }
     }
 }
