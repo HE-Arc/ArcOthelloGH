@@ -77,6 +77,7 @@
     <Compile Include="BoardCell.xaml.cs">
       <DependentUpon>BoardCell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GameLogics\AI\TreeNode.cs" />
     <Compile Include="GameLogics\LogicalBoard.cs" />
     <Compile Include="GameLogics\Game.cs" />
     <Compile Include="GameLogics\Move.cs" />

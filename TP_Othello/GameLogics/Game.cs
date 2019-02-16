@@ -518,6 +518,7 @@ namespace TP_Othello.GameLogics
             if(targetMove != null)
             {
                 logicalBoard.ApplyMove(targetMove);
+                return true;
             }
 
             return false;

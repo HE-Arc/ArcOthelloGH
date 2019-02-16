@@ -18,7 +18,7 @@ namespace TP_Othello.GameLogics
         private int[,] board;
         private Size boardSize;
 
-        public int[,] BoardArray { get => board; private set => board = value; }
+        public int[,] BoardArray { get => board; set => board = value; }
 
         public LogicalBoard(int width, int height)
         {
