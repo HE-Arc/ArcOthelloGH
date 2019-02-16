@@ -60,6 +60,7 @@ namespace TP_Othello.GameLogics
             this.board = board;
         }
 
+
         /// <summary>
         /// Init the board with default value -1 (empty cell)
         /// </summary>
@@ -78,13 +79,13 @@ namespace TP_Othello.GameLogics
         /// <summary>
         /// Get the positions where the player can place a pawn
         /// </summary>
-        /// <param name="playerId">The id of the current player</param>
+        /// <param name="whitePlayer">The id of the current player</param>
         /// <returns>A list of moves</returns>
-        public List<Move> GetPossibleMoves(bool playerId)
+        public static List<Move> GetPossibleMoves(int[,] board, bool whitePlayer, Size boardSize)
         {
             //We use a dictonary so we can easily add pawns to an already existing move
             Dictionary<Point, Move> moves = new Dictionary<Point, Move>();
-            
+
             List<List<Point>> horizontalLines = InitializeList(boardSize.Height);
             List<List<Point>> verticalLines = InitializeList(boardSize.Width);
             List<List<Point>> leftDownDiagonalLines = InitializeList(boardSize.Height + boardSize.Width - 1);//-1-2-2: -1 for the middle line and -2 two times for the corners
@@ -101,9 +102,9 @@ namespace TP_Othello.GameLogics
                     leftDownDiagonalLines[x + y].Add(new Point(x, y));
                 }
 
-                for (int x = boardSize.Width-1; x >= 0; x--)
+                for (int x = boardSize.Width - 1; x >= 0; x--)
                 {
-                    rightDownDiagonalLines[boardSize.Width-1-x + y].Add(new Point(x, y));
+                    rightDownDiagonalLines[boardSize.Width - 1 - x + y].Add(new Point(x, y));
                 }
             }
 
@@ -125,10 +126,10 @@ namespace TP_Othello.GameLogics
             //horizontal possibilities
             for (int i = 0; i < mergedLists.Count; i++)
             {
-                foundMoves = CheckLineForMove(mergedLists[i], playerId);
+                foundMoves = CheckLineForMove(mergedLists[i], whitePlayer, board);
 
-                for(int j = 0; j < foundMoves.Count; j++)
-                {     
+                for (int j = 0; j < foundMoves.Count; j++)
+                {
                     //Get the move
                     Move newMove = foundMoves[j];
 
@@ -174,7 +175,7 @@ namespace TP_Othello.GameLogics
         /// <param name="line">A row/column/diagonal of the board containing the corresponding points</param>
         /// <param name="playerId">The current players id</param>
         /// <returns>A list of the moves found</returns>
-        private List<Move> CheckLineForMove(List<Point> line, bool playerId)
+        private static List<Move> CheckLineForMove(List<Point> line, bool playerId, int[,] board)
         {
             //The result list that will contain all the moves we found
             List<Move> moves = new List<Move>();
@@ -240,7 +241,7 @@ namespace TP_Othello.GameLogics
         /// </summary>
         /// <param name="size">The number of lists wanted</param>
         /// <returns></returns>
-        private List<List<Point>> InitializeList(int size)
+        private static List<List<Point>> InitializeList(int size)
         {
             List<List<Point>> list = new List<List<Point>>();
 
@@ -253,17 +254,25 @@ namespace TP_Othello.GameLogics
         }
 
 
-        public void ApplyMove(Move move)
+
+        public static int[,] ApplyMove(int[,] board, Move move)
         {
             Point position = move.position;
             board[position.X, position.Y] = move.whitePlayer ? 1 : 0;
 
             List<Point> pawnToInvert = move.GetChecksToInvert();
 
-            for(int i = 0; i < pawnToInvert.Count; i++)
+            for (int i = 0; i < pawnToInvert.Count; i++)
             {
                 board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 1 : 0;
             }
+
+            return board;
+        }
+
+        public void ApplyMove(Move move)
+        {
+            BoardArray = ApplyMove(BoardArray, move);
         }
 
         public List<Point> UndoMove(Move move)

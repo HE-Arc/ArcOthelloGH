@@ -10,6 +10,7 @@ using System.Windows.Threading;
 using System.Timers;
 using System.ComponentModel;
 using System.Runtime.Serialization;
+using TP_Othello.GameLogics.AI;
 
 namespace TP_Othello.GameLogics
 {
@@ -42,6 +43,7 @@ namespace TP_Othello.GameLogics
 
         // Current player related
         private bool whitePlayerTurn;
+        private bool AI = true;
         private List<Move> currentPossibleMoves;
 
         #region BoundData
@@ -221,7 +223,7 @@ namespace TP_Othello.GameLogics
         /// </summary>
         public void StartGame()
         {
-            currentPossibleMoves = logicalBoard.GetPossibleMoves(whitePlayerTurn);
+            currentPossibleMoves = LogicalBoard.GetPossibleMoves(logicalBoard.BoardArray, whitePlayerTurn, BOARD_DIMENSIONS);
 
             UpdateHintsDisplay();
             if (windowView != null)
@@ -267,7 +269,7 @@ namespace TP_Othello.GameLogics
 
             UpdateHintsDisplay(false);
 
-            var nextPossibleMoves = this.logicalBoard.GetPossibleMoves(whitePlayerTurn);
+            var nextPossibleMoves = LogicalBoard.GetPossibleMoves(logicalBoard.BoardArray, whitePlayerTurn, BOARD_DIMENSIONS);
             if (!nextPossibleMoves.Any())
             {
                 // if the possible moves for the previous player and the current one are empty nobody can play anymore, it's the end of the game
@@ -293,6 +295,12 @@ namespace TP_Othello.GameLogics
                 GetPlayerStopwatch(whitePlayerTurn).Start();
                 currentPossibleMoves = nextPossibleMoves;
                 UpdateHintsDisplay();
+            }
+
+            if(AI)
+            {
+                Tuple<int, int> movePos = GetNextMove(logicalBoard.BoardArray, 5, whitePlayerTurn);
+                PlayMove(movePos.Item1, movePos.Item2, whitePlayerTurn);
             }
         }
 
@@ -517,7 +525,7 @@ namespace TP_Othello.GameLogics
             Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(movePos)).FirstOrDefault();
             if(targetMove != null)
             {
-                logicalBoard.ApplyMove(targetMove);
+                PlayMove(targetMove);
                 return true;
             }
 
@@ -526,7 +534,9 @@ namespace TP_Othello.GameLogics
 
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
-            throw new NotImplementedException();
+            Move move = OthelloMiniMax.GetMove(game, level, whitePlayerTurn);
+
+            return new Tuple<int, int>(move.position.X, move.position.Y);
         }
 
         public int[,] GetBoard()

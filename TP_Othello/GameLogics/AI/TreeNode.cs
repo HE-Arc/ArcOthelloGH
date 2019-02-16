@@ -11,9 +11,10 @@ namespace TP_Othello.GameLogics.AI
     /// Structure inspired by some post on stackoverflow https://stackoverflow.com/questions/66893/tree-data-structure-in-c-sharp
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    class TreeNode<T>
+    public class TreeNode<T>
     {
         private T data;
+        public T Data { get => data; private set => data = value; }
 
         private LinkedList<TreeNode<T>> children;
 
@@ -37,6 +38,11 @@ namespace TP_Othello.GameLogics.AI
             }
 
             return null;
+        }
+
+        public bool IsLeaf()
+        {
+            return children.Any();
         }
     }
 }

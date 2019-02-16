@@ -10,7 +10,7 @@ namespace TP_Othello.GameLogics
     /// <summary>
     /// This class represents a move with the pawn positions that will be changed if it is applied
     /// </summary>
-    class Move
+    public class Move
     {
         private List<Point> checksToInvert;
         public Point position { get; }

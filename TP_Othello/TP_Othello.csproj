@@ -77,6 +77,8 @@
     <Compile Include="BoardCell.xaml.cs">
       <DependentUpon>BoardCell.xaml</DependentUpon>
     </Compile>
+    <Compile Include="GameLogics\AI\MiniMaxTreeNode.cs" />
+    <Compile Include="GameLogics\AI\OthelloMiniMax.cs" />
     <Compile Include="GameLogics\AI\TreeNode.cs" />
     <Compile Include="GameLogics\LogicalBoard.cs" />
     <Compile Include="GameLogics\Game.cs" />
