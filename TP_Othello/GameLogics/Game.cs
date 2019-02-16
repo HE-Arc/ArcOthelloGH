@@ -208,7 +208,8 @@ namespace TP_Othello.GameLogics
             Random random = new Random();
 
             // starts with a random player
-            whitePlayerTurn = random.Next(0, 2) == 1;
+            //whitePlayerTurn = random.Next(0, 2) == 1;
+            whitePlayerTurn = true;
 
             logicalBoard.InitBoard();
             SetBaseGamePawns();
@@ -287,6 +288,7 @@ namespace TP_Othello.GameLogics
                     currentPossibleMoves = nextPossibleMoves;
                     UpdateHintsDisplay();
                     ChangeTurn();
+                    return;
                 }
             }
             // otherwise we switch player turns regularly
@@ -297,11 +299,13 @@ namespace TP_Othello.GameLogics
                 UpdateHintsDisplay();
             }
 
-            if(AI)
+            if (AI && whitePlayerTurn == false)
             {
                 Tuple<int, int> movePos = GetNextMove(logicalBoard.BoardArray, 5, whitePlayerTurn);
                 PlayMove(movePos.Item1, movePos.Item2, whitePlayerTurn);
+                return;
             }
+
         }
 
         /// <summary>
@@ -368,6 +372,8 @@ namespace TP_Othello.GameLogics
             // if the sender object is a BoardCell we cast it and null checks (equivalent to ...  != null)
             if (Sender is BoardCell senderCell)
             {
+              
+
                 Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(senderCell.BoardPosition)).FirstOrDefault();
                 if(targetMove != null)
                 {
@@ -526,6 +532,7 @@ namespace TP_Othello.GameLogics
             if(targetMove != null)
             {
                 PlayMove(targetMove);
+                ChangeTurn();
                 return true;
             }
 
@@ -535,7 +542,6 @@ namespace TP_Othello.GameLogics
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
             Move move = OthelloMiniMax.GetMove(game, level, whitePlayerTurn);
-
             return new Tuple<int, int>(move.position.X, move.position.Y);
         }
 

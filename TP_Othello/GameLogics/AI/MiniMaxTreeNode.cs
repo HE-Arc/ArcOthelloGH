@@ -20,7 +20,7 @@ namespace TP_Othello.GameLogics.AI
      */
     public class MiniMaxTreeNode : TreeNode<int[,]>
     {
-        const int CORNER_BONUS = 15;
+        const int CORNER_BONUS = 30;
         bool whitePlayer;
 
         public MiniMaxTreeNode(int[,] data, bool whitePlayer) : base(data)
@@ -30,7 +30,8 @@ namespace TP_Othello.GameLogics.AI
 
         public MiniMaxTreeNode ApplyMove(Move move)
         {
-            return new MiniMaxTreeNode(LogicalBoard.ApplyMove(this.Data, move), !whitePlayer);
+            int[,] dataCopy = (int[,])Data.Clone();
+            return new MiniMaxTreeNode(LogicalBoard.ApplyMove(dataCopy, move), !whitePlayer);
         }
 
         public List<Move> GetMoves()
