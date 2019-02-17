@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TP_Othello", "TP_Othello\TP_Othello.csproj", "{3C1BDEBF-5A49-4C20-BB0A-A83A125732B0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IA_Grava_Herbelin", "IA_Grava_Herbelin\IA_Grava_Herbelin.csproj", "{63032511-3F66-4147-AA69-EB40E1AF9735}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{3C1BDEBF-5A49-4C20-BB0A-A83A125732B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C1BDEBF-5A49-4C20-BB0A-A83A125732B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C1BDEBF-5A49-4C20-BB0A-A83A125732B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63032511-3F66-4147-AA69-EB40E1AF9735}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63032511-3F66-4147-AA69-EB40E1AF9735}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63032511-3F66-4147-AA69-EB40E1AF9735}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63032511-3F66-4147-AA69-EB40E1AF9735}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

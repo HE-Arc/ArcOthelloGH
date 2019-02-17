@@ -132,13 +132,14 @@ namespace IA_Grava_Herbelin
         public bool IsPlayable(int column, int line, bool isWhite)
         {
             Point movePos = new Point(column, line);
-
+            currentPossibleMoves = LogicalB.GetPossibleMoves(logicalBoard.BoardArray, isWhite, BOARD_DIMENSIONS);
             return currentPossibleMoves.Any(move => move.position.Equals(movePos));
         }
 
         public bool PlayMove(int column, int line, bool isWhite)
         {
             Point movePos = new Point(column, line);
+            currentPossibleMoves = LogicalB.GetPossibleMoves(logicalBoard.BoardArray, isWhite, BOARD_DIMENSIONS);
             Move targetMove = currentPossibleMoves.Where(move => move.position.Equals(movePos)).FirstOrDefault();
             if (targetMove != null)
             {
