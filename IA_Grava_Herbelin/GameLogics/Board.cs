@@ -15,12 +15,7 @@ namespace IA_Grava_Herbelin
     /// </summary>
     class Board : IPlayable.IPlayable
     {
-        
         private Size BOARD_DIMENSIONS = new System.Drawing.Size(9, 7);
-
-
-        private List<Move> playedMovesStack;
-
 
         // Current player related
         private LogicalB logicalBoard;
@@ -152,7 +147,10 @@ namespace IA_Grava_Herbelin
 
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
+            logicalBoard.BoardArray = game;
+            logicalBoard.drawBo();
             Move move = OthelloMiniMax.GetMove(game, level, whiteTurn);
+            Console.WriteLine(move.position);
             return new Tuple<int, int>(move.position.X, move.position.Y);
         }
 

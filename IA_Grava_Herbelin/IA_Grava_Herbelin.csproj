@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <AssemblyName>OthelloIA_Grava_Herbelin</AssemblyName>
-    <RootNamespace>OthelloIA_Grava_Herbelin</RootNamespace>
+    <AssemblyName>IA_Grava_Herbelin</AssemblyName>
+    <RootNamespace>IA_Grava_Herbelin</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

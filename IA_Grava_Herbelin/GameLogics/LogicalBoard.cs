@@ -255,7 +255,7 @@ namespace IA_Grava_Herbelin.GameLogics
 
 
 
-        public static int[,] ApplyMove(int[,] board, Move move)
+        public static void ApplyMove(int[,] board, Move move)
         {
             Point position = move.position;
             board[position.X, position.Y] = move.whitePlayer ? 1 : 0;
@@ -267,12 +267,11 @@ namespace IA_Grava_Herbelin.GameLogics
                 board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 1 : 0;
             }
 
-            return board;
         }
 
         public void ApplyMove(Move move)
         {
-            BoardArray = ApplyMove(BoardArray, move);
+            ApplyMove(BoardArray, move);
         }
 
         public List<Point> UndoMove(Move move)
