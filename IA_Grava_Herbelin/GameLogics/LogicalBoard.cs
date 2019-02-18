@@ -74,6 +74,12 @@ namespace IA_Grava_Herbelin.GameLogics
                     board[x, y] = -1;
                 }
             }
+
+
+            board[3, 3] = 0;
+            board[4, 4] = 0;
+            board[3, 4] = 1;
+            board[4, 3] = 1;
         }
 
         /// <summary>
@@ -179,8 +185,8 @@ namespace IA_Grava_Herbelin.GameLogics
         {
             //The result list that will contain all the moves we found
             List<Move> moves = new List<Move>();
-            int playerCheck = playerId ? 1 : 0;
-            int opponentCheck = playerId ? 0 : 1;
+            int playerCheck = playerId ? 0 : 1;
+            int opponentCheck = playerId ? 1 : 0;
 
             //We run through the line
             for (int i = 0; i < line.Count; i++)
@@ -258,13 +264,13 @@ namespace IA_Grava_Herbelin.GameLogics
         public static void ApplyMove(int[,] board, Move move)
         {
             Point position = move.position;
-            board[position.X, position.Y] = move.whitePlayer ? 1 : 0;
+            board[position.X, position.Y] = move.whitePlayer ? 0 : 1;
 
             List<Point> pawnToInvert = move.GetChecksToInvert();
 
             for (int i = 0; i < pawnToInvert.Count; i++)
             {
-                board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 1 : 0;
+                board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 0 : 1;
             }
 
         }
@@ -283,7 +289,7 @@ namespace IA_Grava_Herbelin.GameLogics
             
             for (int i = 0; i < pawnToInvert.Count; i++)
             {
-                board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 0 : 1;
+                board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 1 : 0;
             }
 
             return pawnToInvert;

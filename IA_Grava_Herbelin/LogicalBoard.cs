@@ -7,20 +7,20 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-namespace TP_Othello.GameLogics
+namespace IA_Grava_Herbelin.GameLogics
 {
     /// <summary>
     /// This class is the logical part of the Othello Board game. It is basically a 2d int array with helpers such as move checking etc.
     /// </summary>
     [Serializable]
-    public class LogicalBoard : ISerializable
+    public class LogicalB : ISerializable
     {
         private int[,] board;
         private Size boardSize;
 
         public int[,] BoardArray { get => board; set => board = value; }
 
-        public LogicalBoard(int width, int height)
+        public LogicalB(int width, int height)
         {
             board = new int[width, height];
             boardSize = new Size(width, height);
@@ -33,7 +33,7 @@ namespace TP_Othello.GameLogics
         /// </summary>
         /// <param name="info">The list of serialized values</param>
         /// <param name="context">The stream where the data come from</param>
-        private LogicalBoard(SerializationInfo info, StreamingContext context)
+        private LogicalB(SerializationInfo info, StreamingContext context)
         {
             // we get the board as an array and we read the values from it
             Object boardObject = info.GetValue("BoardArray", typeof(Array));
@@ -255,7 +255,7 @@ namespace TP_Othello.GameLogics
 
 
 
-        public static int[,] ApplyMove(int[,] board, Move move)
+        public static void ApplyMove(int[,] board, Move move)
         {
             Point position = move.position;
             board[position.X, position.Y] = move.whitePlayer ? 1 : 0;
@@ -267,12 +267,11 @@ namespace TP_Othello.GameLogics
                 board[pawnToInvert[i].X, pawnToInvert[i].Y] = move.whitePlayer ? 1 : 0;
             }
 
-            return board;
         }
 
         public void ApplyMove(Move move)
         {
-            BoardArray = ApplyMove(BoardArray, move);
+            ApplyMove(BoardArray, move);
         }
 
         public List<Point> UndoMove(Move move)

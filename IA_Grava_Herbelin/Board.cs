@@ -148,19 +148,10 @@ namespace IA_Grava_Herbelin
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
             logicalBoard.BoardArray = game;
-            try
-            {
-                Move move = OthelloMiniMax.GetMove(game, level, whiteTurn);
-                logicalBoard.drawBo();
-                currentPossibleMoves = LogicalB.GetPossibleMoves(game, whiteTurn, BOARD_DIMENSIONS);
-                if (move.position == null)
-                    move = new Move(new Point(-1, -1), whiteTurn);
-                return new Tuple<int, int>(move.position.X, move.position.Y);
-            }
-            catch
-            {
-                return new Tuple<int, int>(-1, -1);
-            }
+            logicalBoard.drawBo();
+            Move move = OthelloMiniMax.GetMove(game, level, whiteTurn);
+            Console.WriteLine(move.position);
+            return new Tuple<int, int>(move.position.X, move.position.Y);
         }
 
         public int[,] GetBoard()
