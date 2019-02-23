@@ -8,6 +8,7 @@ namespace IA_Grava_Herbelin.GameLogics.AI
 {
     public class OthelloMiniMax
     {
+        const int DEPTH_BONUS = 10;
         /// <summary>
         /// Method called by anyone to calculate the best move to play.
         /// </summary>
@@ -19,7 +20,7 @@ namespace IA_Grava_Herbelin.GameLogics.AI
         {
             MiniMaxTreeNode rootNode = new MiniMaxTreeNode(board, whitePlayer);
 
-            Tuple<int, Move> moveSelected = Alphabeta2(rootNode, depth, 1, int.MinValue);
+            Tuple<int, Move> moveSelected = Alphabeta2(rootNode, depth, 1, int.MaxValue);
 
             return moveSelected.Item2;
         }
@@ -36,7 +37,7 @@ namespace IA_Grava_Herbelin.GameLogics.AI
         {
             if(depth == 0 || node.IsLeaf())
             {
-                return new Tuple<int, Move>(node.Evaluate(), null);
+                return new Tuple<int, Move>(node.Evaluate() + DEPTH_BONUS * depth, null);
             }
 
             int optVal = minOrMax == 1 ? int.MinValue : int.MaxValue;

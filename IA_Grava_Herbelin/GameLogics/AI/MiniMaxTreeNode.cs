@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace IA_Grava_Herbelin.GameLogics.AI
 {
@@ -62,11 +63,12 @@ namespace IA_Grava_Herbelin.GameLogics.AI
         {
             int score = 0;
             int playerVal = whitePlayer ? 1 : 0;
-
+            //drawBo();
             for (int column = 0; column < Data.GetLength(0); column++)
             {
                 for (int row = 0; row < Data.GetLength(1); row++)
                 {
+                    int val = Data[column, row];
                     // if we land on a corner
                     if ((column == 0 || column == Data.GetLength(0) - 1) && (row == 0 || row == Data.GetLength(1) - 1))
                     {
@@ -74,16 +76,16 @@ namespace IA_Grava_Herbelin.GameLogics.AI
                         if (Data[column, row] == playerVal)
                             score += CORNER_BONUS;
                         else if(Data[column, row] != -1)
-                            score -= CORNER_BONUS;
+                            score -= CORNER_BONUS / 2;
                     }
 
                     if (Data[column, row] == playerVal)
                         score += 1;
                 }
             }
-
-            return score;
+            return score < 0 ? 0 : score;
         }
+
     }
 }
 

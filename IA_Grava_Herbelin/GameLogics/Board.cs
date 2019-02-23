@@ -150,10 +150,9 @@ namespace IA_Grava_Herbelin
             logicalBoard.BoardArray = game;
             try
             {
-                Move move = OthelloMiniMax.GetMove(game, level, whiteTurn);
-                logicalBoard.drawBo();
                 currentPossibleMoves = LogicalB.GetPossibleMoves(game, whiteTurn, BOARD_DIMENSIONS);
-                if (move.position == null)
+                Move move = OthelloMiniMax.GetMove(game, level, whiteTurn);
+                if (move == null)
                     move = new Move(new Point(-1, -1), whiteTurn);
                 return new Tuple<int, int>(move.position.X, move.position.Y);
             }
